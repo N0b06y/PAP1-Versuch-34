@@ -1,0 +1,33 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sty/Layout}[2026/08/27 PAP1 layout]
+
+\RequirePackage[
+a4paper,left=24mm,right=24mm,top=30mm,bottom=25mm,
+headheight= 15mm,]{geometry} % Page layout
+
+\RequirePackage[utf8]{inputenc}	% Input
+\RequirePackage[T1]{fontenc}	% Output
+\RequirePackage[english]{babel}	% Language package
+\RequirePackage{fancyhdr}	% Header
+\RequirePackage{hyperref}	% Hyperlinks
+\RequirePackage{graphicx}
+\RequirePackage{diagbox}
+
+% Paragraph formatting
+\RequirePackage{parskip}
+\setlength{\parindent}{0mm}
+
+% Header and footer
+\renewcommand{\headrulewidth}{0.2mm}
+
+\fancyhead[L]{
+\textsf{\textbf{Introductory Physics Laboratory 1}} \\
+Report\\
+Experiment: 11
+}
+
+\fancyhead[R]{
+Group 8\\
+Matthes Neumann \\
+Partner: Linus Fuchs
+}
