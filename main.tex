@@ -466,24 +466,20 @@ Fehler, da die berechneten Intensitäten und statistischen Fehler in der Messtab
 Seite~\pageref{page:messtabelle42} nicht stimmen.
 
 \begin{table}[htbp]
-	\centering
-	\small
-	\begin{tabular}{@{}S[table-format=2.1] S[table-format=5.0] S[table-format=2.0]
-			S[table-format=1.2]@{}}
-		\toprule
-		{$l$ [\si{cm}]} & {$\bar I$ [counts]} & {$\Delta_\mathrm{stat} I$ [counts]} & {$\Delta I / I$ [\si{\percent}]} \\
-		\midrule
-		1,5 & 61510 & 70 & 0,11 \\
-		3   & 42430 & 40 & 0,09 \\
-		6   & 20586 & 10 & 0,05 \\
-		12  & 4910  & 6  & 0,12 \\
-		24  & 636   & 4  & 0,63 \\
-		\bottomrule
-	\end{tabular}
-	\caption{Aufgabe 2: Mittelwerte der fünf Einzelmessungen und statistische
-		Fehler nach \eqref{eq:mittelwert}. Die Werte bei $l = \qty{12}{cm}$ und
-		$l = \qty{24}{cm}$ sind noch unkorrigiert, vgl.\ \eqref{eq:korrektur}.}
-	\label{tab:lambert}
+  \centering\small
+  \begin{tabular}{@{}S[table-format=2.1] S[table-format=5.0] S[table-format=2.0] S[table-format=1.3]@{}}
+    \toprule
+    {$l$ [\si{cm}]} & {$\bar I$ [counts]} & {$\Delta_{\mathrm{stat}} I$ [counts]} & {$\Delta I/I$ [\si{\percent}]} \\
+    \midrule
+    1,5 & 61511 & 80 & 0,124 \\
+    3 & 42435 & 50 & 0,099 \\
+    6 & 20583 & 12 & 0,056 \\
+    12 & 4910 & 6 & 0,104 \\
+    24 & 636 & 4 & 0,584 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Aufgabe 2: Mittelwerte der fünf Einzelmessungen und ihre statistischen Fehler nach \eqref{eq:mittelwert}. Werte bei $l=\qty{12}{cm}$ und $l=\qty{24}{cm}$ unkorrigiert.}
+  \label{tab:lambert}
 \end{table}
 
 Dabei wurde ein Ablesefehler ab Küvettengrößen von $\qty{6}{cm}$ berücksichtigt, da er bei geringeren Längen
@@ -508,11 +504,26 @@ dass man sie nicht erkennen könnte.
 Nun bestimmen wir noch aus den Aufnahmen in Tabelle 4.3 auf Seite \pageref{page:messtabelle42} die Korrekturfaktoren und Wenden diese
 an. Daraus erhalten wir die Folgende Wertetabelle:
 
+\begin{table}[htbp]
+  \centering\small
+  \begin{tabular}{@{}cccc@{}}
+    \toprule
+    $l$ & $D_\mathrm{mK}$ & $f=D_\mathrm{mK}^2/D_\mathrm{oK}^2$ & $I_\mathrm{korr}$ [counts] \\
+    \midrule
+    \qty{12}{cm} & \qty{45(1)}{mm} & \qty{0.413(22)}{} & \qty{2030(110)}{} \\
+    \qty{24}{cm} & \qty{40(1)}{mm} & \qty{0.327(19)}{} & \qty{208(13)}{} \\
+    \bottomrule
+  \end{tabular}
+  \caption{Strahlengangkorrektur nach \eqref{eq:korrektur} mit $D_\mathrm{oK}=\qty{70(1)}{mm}$.}
+  \label{tab:korrektur}
+\end{table}
+
+
+
 Mit den korrigierten Werten und den Werten aus der Tabelle 5.3 auf Seite~\pageref{page:messtabelle53} im Messprotokoll erstellen wir eine Darstellung auf 
 halblogarithmischem Skalenpapier um daraus in der Auswertung  die Lambert- sowie Beer-Geraden zu bestimmen. Die Geraden zeichnen wir
 bereits ein.
 
-TODO: Korrekturformel
 
 \begin{figure}[htbp]
 	\centering
@@ -525,6 +536,34 @@ TODO: Korrekturformel
 		mit eingezeichneten Lambert- und Beer-Geraden.}
 	\label{fig:lambert-beer-geraden}
 \end{figure}
+\begin{table}[htbp]
+	\centering
+	\small
+	\begin{tabular}{@{}S[table-format=2.1] S[table-format=5.0] S[table-format=3.0]
+			S[table-format=1.2] l@{}}
+		\toprule
+		{$l$ [\si{cm}]} & {$I_\mathrm{korr}$ [counts]}
+		& {$\Delta I_\mathrm{korr}$ [counts]}
+		& {$\Delta I_\mathrm{korr} / I_\mathrm{korr}$ [\si{\percent}]}
+		& {Korrektur} \\
+		\midrule
+		1,5 & 61511 & 77  & 0,12 & keine \\
+		3   & 42435 & 42  & 0,10 & keine \\
+		6   & 20583 & 12  & 0,06 & keine \\
+		12  & 2030  & 110 & 5,28 & $\cdot\,0{,}4133$ \\
+		24  & 208   & 13  & 5,79 & $\cdot\,0{,}3265$ \\
+		\bottomrule
+	\end{tabular}
+	\caption{Aufgabe 2: Messpunkte der Lambert-Geraden, wie sie in
+		Darstellung~\ref{fig:lambert-beer-geraden} eingetragen sind. Die
+		Werte bei $l = \qty{12}{cm}$ und $l = \qty{24}{cm}$ sind nach
+		\eqref{eq:korrektur} mit dem angegebenen Faktor
+		$(D_\mathrm{mK}/D_\mathrm{oK})^2$ korrigiert, ihr Fehler folgt aus
+		\eqref{eq:fehler_korrektur} und wird von der Ablesegenauigkeit
+		dominiert. Die drei kürzeren Küvetten
+		übernehmen die Werte aus Tabelle~\ref{tab:lambert} unverändert.}
+	\label{tab:lambert-korr}
+\end{table}
 
 \section{Auswertung}
 \label{sec:auswertung}
@@ -633,7 +672,7 @@ ergibt das einen molaren Extiktionskoeffizienten über
 
 \begin{align}
 	\boxed{
-		\epsilon_L = \SI{1.11(6)e5}{\frac{\liter}{\mol \cdot cm}}
+		\epsilon_L = \SI{1.11(6)e5}{\frac{\liter}{\mol \cdot cm}} = \qty{1.11(6)e8}{\frac{cm^2}{\mol}}
 	}
 	\label{eq:res-lambert}
 	\end{align}
@@ -648,12 +687,12 @@ ab.
 Wir fangen mit der Ausgleichsgeraden an, welche uns die Werte
 
 \begin{align}
-	c_1 &= \qty{26.5625}{\tilde{c}}\\
+	c_1 &= \qty{26.5625e-2}{\tilde{c}}\\
 	I_1 &= \qty{2.4e4}{counts}
 \end{align}
 
 \begin{align}
-	c_2 &= \qty{42.8125}{\tilde{c}}\\
+	c_2 &= \qty{42.8125e-2}{\tilde{c}}\\
 	I_2 &= \qty{1.7e4}{counts}
 \end{align}
 \begin{align}
@@ -684,9 +723,9 @@ dabei die flachere und $\epsilon_{e2}$ die steilere. Die Ablesewerte der
 Fehlergereaden lauten für $\epsilon_{e1}$
 
 \begin{align}% flacher
-	c_{e1,1} &= \qty{.9375}{\tilde{c}}\\
+	c_{e1,1} &= \qty{.9375e-2}{\tilde{c}}\\
 	I_{e1,1} &= \qty{4.0e4}{counts}\\
-	c_{e1,2} &= \qty{49.0625}{\tilde{c}}\\
+	c_{e1,2} &= \qty{49.0625e-2}{\tilde{c}}\\
 	I_{e1,2} &= \qty{1.6e4}{counts}\\
 \end{align}
 
@@ -694,13 +733,11 @@ und für  $\epsilon_{e2}$
 
 % steiler
 \begin{align}
-	c_{e2,1} &= \qty{.9375}{\tilde{c}}\\
+	c_{e2,1} &= \qty{.9375e-2}{\tilde{c}}\\
 	I_{e2,1} &= \qty{4.4e4}{counts}\\
-	c_{e2,2} &= \qty{49.375}{\tilde{c}}\\
+	c_{e2,2} &= \qty{49.375e-2}{\tilde{c}}\\
 	I_{e2,2} &= \qty{1.4e4}{counts}\\
 \end{align}
-TODO:flachere kurve kleineres c und grösseres I
-
 Daraus errechnen sich wieder mit Gleichung~\eqref{eq:epsilon_beer} die Koeffizienten:
 
 \begin{align}
@@ -722,6 +759,7 @@ Damit erhalten wir das fehlerbehaftete Resultat für $\epsilon_B$ von
 \begin{align}
 	\boxed{
 		\epsilon_B = \qty{1.23(.15)e5}{\frac{\liter}{\mol \cdot cm}}
+		= \qty{1.23(15)e8}{\frac{cm^2}{\mol}}
 	}
 	\label{eq:res-beer}
 \end{align}
@@ -773,8 +811,8 @@ erhalten:
 \begin{equation}
 	\boxed{
 		\begin{aligned}
-			\epsilon_B &= \qty{1.23(.15)e5}{\frac{\liter}{\mol \cdot cm}}\\
-			\epsilon_L &= \SI{1.11(6)e5}{\frac{\liter}{\mol \cdot cm}}
+			\epsilon_B &= \qty{1.23(.15)e5}{\frac{\liter}{\mol \cdot cm}}= \qty{1.23(15)e8}{\frac{cm^2}{\mol}}\\
+			\epsilon_L &= \SI{1.11(6)e5}{\frac{\liter}{\mol \cdot cm}} = \qty{1.11(6)e8}{\frac{cm^2}{\mol}}
 		\end{aligned}
 	}
 \end{equation}
@@ -794,10 +832,7 @@ von
 Dabei ist die Abweichung von $t_{lit, B} = \qty{1.8}{\sigma}$ beim Beerverfahren so gut verträglich, 
 dass es keiner weiteren Erklärung bedarf. Anders sieht es bei der Bestimmung durch Lambert aus, was uns 
 eine Sigma-Abweichung von $t_{lit,L}  =  \qty{2.8}{\sigma}$ liefert, was nach unserem Kriterium eine signifikante Abweichung ist.
-Das liegt zum einen daran, dass laut Datenblatt die Farbstoffkonzentration bis zu $\qty{14}{\percent}$
-von dem angenommenen Werten abweicht. Das bedingt einen systematischen Fehler, was zu unseren Werten passt,
-da beide Messergebnisse über dem angegebenen Messwert mit ungefähr $\qty{14}{\percent}$ liegen.
-Zudem ist unsere Korrektur sehr ungenau. Man erkennt schon an den Werten der Lambertgrade für 
+Das liegt zum einen daran, dass unsere Korrektur sehr ungenau ist. Man erkennt schon an den Werten der Lambertgrade für 
 die $\qty{12}{cm}$ Küvette, dass der Korrekturwert viel zu stark von der Gerade durch die vorherigen Werte 
 abweicht aber die echte Abweichung so groß ist, dass man den Wert am besten korrigieren sollte.
 Die letzte Fehlerquelle, ist der Literaturwert. Der angegebene Literaturwert wurde in anderen Aufbauten,
@@ -805,6 +840,9 @@ bei anderen Bedingungen bestimmt, die Wellenlänge des Lichts ist etwas geringer
 Fehler angegeben.
 Es handelt sich hier also eher um einen Wert, der uns ganz grob bestätigt, dass wir nicht ganz falsch bei unserer
 Messung liegen und nicht angibt, wie groß unsere tatsächliche Abweichung bei der Messung ist.
+In der Aufgabenstellung steht auch, dass die Konzentration unter der nominalen sein kann,
+das zu berücksichtigen würde aber den systematischen Fehler in die falsche richtungs korrigieren, was unseren 
+nicht erklärt.
 
 Zusammenfassend kann man sagen, dass unsere Messungen zwar teils ungenau sind, uns aber dennoch verschiedene
 Verfahren zur Bestimmung des Extinktinoskoeffizienten mithilfe der Spektrometrie beigebracht haben. Zudem
