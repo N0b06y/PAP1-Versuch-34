@@ -113,6 +113,14 @@ daraus eine Gerade in $l$:
 \end{equation}
 $k'$ heißt dekadischer (Bunsenscher) Absorptionskoeffizient. Auf halblogarithmischem
 Papier liegen die Messpunkte $I(l)$ also auf einer Geraden mit Steigung $-k'$.
+Ihre Steigung bestimmen wir über ein Steigungsdreieck: Wir wählen zwei möglichst weit
+auseinanderliegende Punkte $(l_1, I_1)$ und $(l_2, I_2)$ auf der Ausgleichsgeraden und
+lesen ihre Koordinaten ab. Da die Intensität mit wachsender Schichtdicke abnimmt, ist
+$I_1 > I_2$ für $l_1 < l_2$, und wir erhalten den positiven Koeffizienten
+\begin{equation}
+	k' = \frac{\log I_1 - \log I_2}{l_2 - l_1} .
+	\label{eq:kstrich_steigung}
+\end{equation}
 
 \begin{figure}[htbp]
 	\centering
@@ -167,21 +175,42 @@ $i$-ten Schritt ist
 	\label{eq:konzentration}
 \end{equation}
 Mit den Nennvolumina aus Tabelle~\ref{tab:konstanten} ergibt sich die Abstufung
-$c_i = \tilde{c}/16,\ \tilde{c}/8,\ \tilde{c}/4,\ \tilde{c}/2$.
+$c_i = \tilde{c}/16,\ \tilde{c}/8,\ \tilde{c}/4,\ \tilde{c}/2$
+$=$ \qtylist{0,3125;0,625;1,25;2,5}{\micro\mole\per\liter}.
 
 \subsubsection{Bestimmung von \texorpdfstring{$\epsilon$}{epsilon}}
 \label{sec:epsilon}
 
-Nach \eqref{eq:lambert_beer} gibt es zwei Wege zu $\epsilon$. Eine Abnahme der Intensität
-um den Faktor~10 entspricht einer Änderung von $\log I$ um~1. Lesen wir aus der
-Lambert-Geraden die dafür nötige Schichtdicke $l'$ und aus der Beer-Geraden die nötige
-Konzentration $c'$ ab, so gilt
+Nach \eqref{eq:lambert_beer} gibt es zwei Wege zu $\epsilon$, je nachdem, welche der
+beiden Größen $l$ und $c$ wir festhalten.
+
+\paragraph{Lambert-Methode.} Bei fester Konzentration $c$ des Küvettensatzes bestimmen wir
+$k'$ nach \eqref{eq:kstrich_steigung} aus der Lambert-Geraden und erhalten mit
+\eqref{eq:beer} den Extinktionskoeffizienten. Da $c$ ein Nennwert ohne angegebenen Fehler
+ist, trägt nach \eqref{eq:gauss} nur der Fehler von $k'$ bei:
 \begin{equation}
-	\text{Lambert:}\quad k' = \frac{1}{l'} ,\quad \epsilon = \frac{k'}{c}
-	\qquad\qquad
-	\text{Beer:}\quad \epsilon\,l = \frac{1}{c'} ,\quad \epsilon = \frac{1}{c'\,l} .
-	\label{eq:epsilon}
+	\epsilon_L = \frac{k'}{c} ,
+	\qquad
+	\Delta\epsilon_L = \frac{\Delta k'}{c} .
+	\label{eq:epsilon_lambert}
 \end{equation}
+
+\paragraph{Beer-Methode.} Bei fester Schichtdicke $l = \qty{1,5}{cm}$ der rechteckigen
+Küvette folgt aus \eqref{eq:lambert_beer}
+\begin{equation}
+	\log I = -\epsilon\,l\,c + \text{const} .
+	\label{eq:beer_log}
+\end{equation}
+Tragen wir $I$ halblogarithmisch gegen $c$ auf, erhalten wir also eine Gerade mit der
+Steigung $-\epsilon l$. Lesen wir wie bei Lambert zwei Punkte $(c_1, I_1)$ und
+$(c_2, I_2)$ mit $c_1 < c_2$ auf der Beer-Geraden ab, so ergibt sich
+\begin{equation}
+	\epsilon_B = \frac{\log I_1 - \log I_2}{l\,(c_2 - c_1)} .
+	\label{eq:epsilon_beer}
+\end{equation}
+Den Fehler von $\epsilon_B$ bestimmen wir direkt aus den Fehlergeraden nach
+\eqref{eq:fehlergerade}, da $l$ ebenfalls als Nennwert eingeht.
+
 Mit $c$ in \si{mol/l} und $l$ in \si{cm} erhalten wir $\epsilon$ in \si{l/(mol.cm)}.
 Wegen $\qty{1}{l} = \qty{e3}{cm^3}$ gilt
 \begin{equation}
@@ -216,6 +245,15 @@ mit ($D_\mathrm{mK}$) und ohne Küvette ($D_\mathrm{oK}$):
 	I_\mathrm{korr} = I\,\frac{D_\mathrm{mK}^2}{D_\mathrm{oK}^2} .
 	\label{eq:korrektur}
 \end{equation}
+Die Durchmesser lesen wir mit dem Ablesefehler $\Delta D$ ab. Da sie quadratisch
+eingehen, zählt ihr relativer Fehler nach \eqref{eq:gauss} doppelt:
+\begin{equation}
+	\frac{\Delta I_\mathrm{korr}}{I_\mathrm{korr}} =
+	\sqrt{\left(\frac{\Delta I}{I}\right)^{2}
+		+ \left(\frac{2\,\Delta D_\mathrm{mK}}{D_\mathrm{mK}}\right)^{2}
+		+ \left(\frac{2\,\Delta D_\mathrm{oK}}{D_\mathrm{oK}}\right)^{2}} .
+	\label{eq:fehler_korrektur}
+\end{equation}
 
 \subsubsection{Fehlerrechnung}
 \label{sec:fehlerrechnung}
@@ -238,6 +276,15 @@ Gauß'sche Fehlerfortpflanzung
 	\Delta f = \sqrt{\sum_{j=1}^{k}
 		\left(\frac{\partial f}{\partial x_j}\,\Delta x_j\right)^{2}} .
 	\label{eq:gauss}
+\end{equation}
+Bei grafischen Auswertungen bestimmen wir den Fehler einer Steigung $a$ (hier $k'$ bzw.
+$\epsilon_B$) über Fehlergeraden. Neben der Ausgleichsgeraden zeichnen wir die steilste
+und die flachste Gerade ein, die die Messpunkte unter Berücksichtigung ihrer Fehler gerade
+noch beschreiben, und bestimmen deren Steigungen $a_{e1}$ und $a_{e2}$ auf dieselbe Weise.
+Als Fehler nehmen wir die größere der beiden Abweichungen:
+\begin{equation}
+	\Delta a = \max\left(\left|a_{e1} - a\right|,\ \left|a_{e2} - a\right|\right) .
+	\label{eq:fehlergerade}
 \end{equation}
 Zwei Werte vergleichen wir über die Abweichung in Standardabweichungen
 \begin{equation}
@@ -384,7 +431,26 @@ Durchführung ist im Messprotokoll (Abschnitt~\ref{sec:messprotokoll}) beschrieb
 	linkname=messprotokoll]{Attachments/protokol v34 bearbeitet flat.pdf}
 
 \includepdf[
-	pages=5-7,
+	pages=5,
+	width=\paperwidth,
+	height=\paperheight,
+	keepaspectratio,
+	pagecommand={\thispagestyle{empty}},
+	link,
+	linkname=messprotokoll]{Attachments/protokol v34 bearbeitet flat.pdf}
+
+% Seite 6 des Scans enthält Messtabelle 5.3 (Aufgabe 3)
+\includepdf[
+	pages=6,
+	width=\paperwidth,
+	height=\paperheight,
+	keepaspectratio,
+	pagecommand={\thispagestyle{empty}\label{page:messtabelle53}},
+	link,
+	linkname=messprotokoll]{Attachments/protokol v34 bearbeitet flat.pdf}
+
+\includepdf[
+	pages=7,
 	width=\paperwidth,
 	height=\paperheight,
 	keepaspectratio,
@@ -442,7 +508,7 @@ dass man sie nicht erkennen könnte.
 Nun bestimmen wir noch aus den Aufnahmen in Tabelle 4.3 auf Seite \pageref{page:messtabelle42} die Korrekturfaktoren und Wenden diese
 an. Daraus erhalten wir die Folgende Wertetabelle:
 
-Mit den korrigierten Werten und den Werten aus der Tabelle 5.3 auf Seite 6 im Messprotokoll erstellen wir eine Darstellung auf 
+Mit den korrigierten Werten und den Werten aus der Tabelle 5.3 auf Seite~\pageref{page:messtabelle53} im Messprotokoll erstellen wir eine Darstellung auf 
 halblogarithmischem Skalenpapier um daraus in der Auswertung  die Lambert- sowie Beer-Geraden zu bestimmen. Die Geraden zeichnen wir
 bereits ein.
 
@@ -478,12 +544,12 @@ Wir betrachten zunächst die dunklere Kurve in Darstellung~\ref{fig:lambert-beer
 Lambert-Gerade mit den Daten aus Versuchsaufgabe 2 auf Seite~\pageref{page:messtabelle42} darstellt.
 Wir lesen die x-Achsen-Abschnitte des Steigungsdreiecks auf des Abszisse als $x_1 = \qty{6.0}{cm}$ und $x_2 = \qty{11.2}{cm}$
 bei einem Ablesefehler von einem halben Skalenteil, was $\qty{1}{\milli \meter}$ entspricht. Die 
-entsprechenden Intensitäts-Werte auf der Ordinate lauten $I_1 = \qty{1.9e3}{counts}$ und $I_2 = \qty{5.0e2}{counts}$
-Aus diesen Werten erhalten wir durch Formel~\ref{HEIR EINFÜGEN}:
+entsprechenden Intensitäts-Werte auf der Ordinate lauten $I_1 = \qty{1.9e4}{counts}$ und $I_2 = \qty{5.0e3}{counts}$
+Aus diesen Werten erhalten wir durch Formel~\eqref{eq:kstrich_steigung}:
 
 \begin{align}
-	k' &= \frac{log_{10}(I_1) - log_{10}(I_2)}{x_2 - x_1} 
-	= \frac{log_{10}(\qty{1.9e2}{counts}) - log_{10}(\qty{5e1}{counts})}
+	k' &= \frac{\log_{10}(I_1) - \log_{10}(I_2)}{x_2 - x_1} 
+	= \frac{\log_{10}(\qty{1.9e4}{counts}) - \log_{10}(\qty{5.0e3}{counts})}
 	{ \qty{11.2e-2}{\meter} - \qty{6e-2}{\meter} } \\
 	&= \qty{1.11496846e1}{\per \meter}
 	\approx \qty{1.11e-1}{cm^{-1}}
@@ -495,18 +561,18 @@ Zuerst die flachere Fehlerkurve zu $k'_{e1}$:
 \begin{align}
 	% flacher
 	x_{e1,1} &= \qty{1.8}{cm}\\
-	I_{e1,1} &= \qty{5.0e2}{counts}\\
+	I_{e1,1} &= \qty{5.0e4}{counts}\\
 	x_{e1,2} &= \qty{22.2}{cm}\\
-	I_{e1,2} &= \qty{3.4}{counts}\\
+	I_{e1,2} &= \qty{3.4e2}{counts}\\
 \end{align}
 
 Und dann die steilere Fehlerkurve zu $k'_{e2}$:
 \begin{align}
 	% steiler
 	x_{e2,1} &= \qty{4.8}{cm}\\
-	I_{e2,1} &= \qty{2.8e2}{unit}\\
+	I_{e2,1} &= \qty{2.8e4}{counts}\\
 	x_{e2,2} &= \qty{21.8}{cm}\\
-	I_{e2,2} &= \qty{3.0}{counts}\\
+	I_{e2,2} &= \qty{3.0e2}{counts}\\
 \end{align}
 
 Durch analoge Rechnung zu \eqref{eq:k-strich-ausw} kommt man bei den Fehlergeraden auf Werte von 
@@ -534,7 +600,7 @@ Wir nehmen also den ersten Wert und erhalten somit ein Resultat von
 	\label{eq:k-strich-result-lambert}
 \end{align}
 
-Mit dieser Konstante können wir aus dem Zusammenhang in Formel~\eqref{HINZUFÜGEN} wie folgt den 
+Mit dieser Konstante können wir aus dem Zusammenhang in Formel~\eqref{eq:epsilon_lambert} wie folgt den 
 molaren Extinktionskoeffizienten $\epsilon$ durch eine gegebene Konzentration 
 $c=\qty{1e-6}{\mole \per \liter}$ bestimmen:
 \begin{align}
@@ -572,7 +638,7 @@ ergibt das einen molaren Extiktionskoeffizienten über
 	\label{eq:res-lambert}
 	\end{align}
 
-\subsection{Bestimmung des molaren Extinktionskoeffizienten durch Lambert}
+\subsection{Bestimmung des molaren Extinktionskoeffizienten durch Beer}
 \label{sec:ausw-aufg-2}
 
 Analog zur vorherigen Aufgabe~\ref{sec:ausw-aufg-1} lesen wir aus 
@@ -583,24 +649,24 @@ Wir fangen mit der Ausgleichsgeraden an, welche uns die Werte
 
 \begin{align}
 	c_1 &= \qty{26.5625}{\tilde{c}}\\
-	I_1 &= \qty{2.4e2}{counts}
+	I_1 &= \qty{2.4e4}{counts}
 \end{align}
 
 \begin{align}
 	c_2 &= \qty{42.8125}{\tilde{c}}\\
-	I_2 &= \qty{1.7e2}{counts}
+	I_2 &= \qty{1.7e4}{counts}
 \end{align}
 \begin{align}
 	\tilde{c} &= \qty{5e-6}{\mole \per \liter}
 \end{align}
 
 liefern.
-Mit Gleichung~\ref{EINFÜGEN} berechnen wir wie zuvor nun zunächst den Wert
+Mit Gleichung~\eqref{eq:epsilon_beer} berechnen wir wie zuvor nun zunächst den Wert
 des bestimmten Extinktionskoeffizienten $\epsilon$:
 
 \begin{align}
 	\epsilon_B = \frac{
-		\log_{10}(I_2)- \log_10(I_1)
+		\log_{10}(I_1) - \log_{10}(I_2)
 	} {
 		(c_2 - c_1) \cdot d
 	}
@@ -619,23 +685,23 @@ Fehlergereaden lauten für $\epsilon_{e1}$
 
 \begin{align}% flacher
 	c_{e1,1} &= \qty{.9375}{\tilde{c}}\\
-	I_{e1,1} &= \qty{4.0e2}{counts}\\
+	I_{e1,1} &= \qty{4.0e4}{counts}\\
 	c_{e1,2} &= \qty{49.0625}{\tilde{c}}\\
-	I_{e1,2} &= \qty{1.6e2}{counts}\\
+	I_{e1,2} &= \qty{1.6e4}{counts}\\
 \end{align}
 
 und für  $\epsilon_{e2}$
 
 % steiler
 \begin{align}
-	c_{e1,1} &= \qty{.9375}{\tilde{c}}\\
-	I_{e1,1} &= \qty{4.4e2}{counts}\\
-	c_{e1,2} &= \qty{49.375}{\tilde{c}}\\
-	I_{e1,2} &= \qty{1.4e2}{counts}\\
+	c_{e2,1} &= \qty{.9375}{\tilde{c}}\\
+	I_{e2,1} &= \qty{4.4e4}{counts}\\
+	c_{e2,2} &= \qty{49.375}{\tilde{c}}\\
+	I_{e2,2} &= \qty{1.4e4}{counts}\\
 \end{align}
 TODO:flachere kurve kleineres c und grösseres I
 
-Daraus errechnen sich wieder mit Gleichung~\ref{EINFÜGEN} die Koeffizienten:
+Daraus errechnen sich wieder mit Gleichung~\eqref{eq:epsilon_beer} die Koeffizienten:
 
 \begin{align}
 	\epsilon_{e1} &= \qty{1.102517773e5}{\frac{\liter}{\mol \cdot cm}}\\
@@ -645,11 +711,11 @@ Daraus errechnen sich wieder mit Gleichung~\ref{EINFÜGEN} die Koeffizienten:
 woraus sich die Abweichungen
 
 \begin{align}
-	\Delta \epsilon_{e1} &= \qty{0.14016e5}{\mole \per \liter} \approx \qty{0.15e5}{\frac{\liter}{\mol \cdot cm}}\\
-	\Delta \epsilon_{e2} &= \qty{0.1263e5}{\mole \per \liter}
+	\Delta \epsilon_{e1} &= \qty{0.1263e5}{\frac{\liter}{\mol \cdot cm}}\\
+	\Delta \epsilon_{e2} &= \qty{0.14016e5}{\frac{\liter}{\mol \cdot cm}} \approx \qty{0.15e5}{\frac{\liter}{\mol \cdot cm}}
 \end{align}
 
-ergeben. Wir wählen $\Delta \epsilon_{e1}$ mit der grösseren Abweichung als 
+ergeben. Wir wählen $\Delta \epsilon_{e2}$ mit der grösseren Abweichung als 
 resultierenden Fehler.\\ 
 Damit erhalten wir das fehlerbehaftete Resultat für $\epsilon_B$ von
 
@@ -663,7 +729,7 @@ Damit erhalten wir das fehlerbehaftete Resultat für $\epsilon_B$ von
 \subsection{Vergleich der bestimmten Extinktionskoeffizienten}
 
 Um die Rsultate zu Vergleichen, machen wir einen Signifikanztest über
-die Sigmaabweichung. Die beträgt mit dem Verfahren in Abschnitt~\ref{EINFÜGEN}
+die Sigmaabweichung. Die beträgt mit dem Verfahren in Abschnitt~\ref{sec:fehlerrechnung}
 \begin{align}
 	\boxed{
 		t = \qty{.8}{\sigma}
@@ -673,7 +739,7 @@ die Sigmaabweichung. Die beträgt mit dem Verfahren in Abschnitt~\ref{EINFÜGEN}
 was eine sehr gute Verträglichkeit der Messwerte impliziert. Es ist zu bemerken, 
 dass die Bestimmung durch da Lambert Verfahren eine deutlich bessere Präzision 
 des Ergebnisses hervorbringt. Nun vergleichen wir die Werte noch mit dem Literaturwert
-$\epsilon_{lit} = \qty{.97e5}{\frac{\liter}{\mol \cdot cm}}$ (siehe Quelle 3)und erhalten:
+$\epsilon_{lit} = \qty{.97e5}{\frac{\liter}{\mol \cdot cm}}$ (siehe \cite{chebotarev2017})und erhalten:
 
 \begin{equation}
 	\boxed{
@@ -684,8 +750,8 @@ $\epsilon_{lit} = \qty{.97e5}{\frac{\liter}{\mol \cdot cm}}$ (siehe Quelle 3)und
 	}
 \end{equation}
 
-Der Vergleich zeigt, dass unsere Messergebnisse mit dem Literaturwert verträglich sind,
-dennoch diskutiert werden sollte, wo diese herkommen.
+Der Vergleich zeigt, dass $\epsilon_B$ mit dem Literaturwert verträglich ist, $\epsilon_L$ jedoch
+signifikant abweicht. Woher diese Abweichungen kommen, diskutieren wir im Folgenden.
 
 
 \section{Diskussion}
@@ -727,7 +793,7 @@ von
 
 Dabei ist die Abweichung von $t_{lit, B} = \qty{1.8}{\sigma}$ beim Beerverfahren so gut verträglich, 
 dass es keiner weiteren Erklärung bedarf. Anders sieht es bei der Bestimmung durch Lambert aus, was uns 
-eine Sigma-Abweichung von $t_{lit,L}  =  \qty{2.8}{\sigma}$ liefert, was grenzwertig hoch ist.
+eine Sigma-Abweichung von $t_{lit,L}  =  \qty{2.8}{\sigma}$ liefert, was nach unserem Kriterium eine signifikante Abweichung ist.
 Das liegt zum einen daran, dass laut Datenblatt die Farbstoffkonzentration bis zu $\qty{14}{\percent}$
 von dem angenommenen Werten abweicht. Das bedingt einen systematischen Fehler, was zu unseren Werten passt,
 da beide Messergebnisse über dem angegebenen Messwert mit ungefähr $\qty{14}{\percent}$ liegen.
@@ -744,18 +810,9 @@ Zusammenfassend kann man sagen, dass unsere Messungen zwar teils ungenau sind, u
 Verfahren zur Bestimmung des Extinktinoskoeffizienten mithilfe der Spektrometrie beigebracht haben. Zudem
 halte ich es für sehr sinnvoll, grafische Auswertungen einige Male per Hand zu erstellen, da man dort am Anfang
 noch sehr viele Fehler macht. Auswertungen am logarithmischen Papier sind auch sehr praktisch und haben mir gezeigt,
-wie das eigenlich funktioniert.
-
-
-TODO: Alle signigikaneten stelle prüfen
-Was ins Protokoll gehört, ist nur ein Satz, 
-der zeigt, dass du es bedacht hast — etwa: 
-„Der Ablesefehler des Steigungsdreiecks 
-%±0,5 mm auf 47,4 mm, ≈ 1,5  ist gegenüber der
- aus den Fehlergeraden gewonnenen Unsicherheit von 23 
-  vernachlässigbar und wird nicht separat angesetzt." 
-  Das ist besser als ein zusätzlicher Fehlerterm, weil 
-  es die Abschätzung zeigt statt sie zu verstec
+wie das eigenlich funktioniert und mir etwas Routine gegeben.
+Ich würde den Versuch dennoch als erfolgreich werten, da sich die Abweichung von $\epsilon_L$ durch die
+genannten systematischen Fehler erklären lässt und ich persönlich sehr viel knwo-how aus diesem Versuch mitgenommen habe.
 
 \section{Quellenverzeichnis}
 \label{sec:quellen}
