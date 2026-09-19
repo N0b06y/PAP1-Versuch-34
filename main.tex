@@ -3,9 +3,14 @@
 \usepackage{sty/Commands}
 \usepackage{sty/Titlepage}
 \usepackage{siunitx}
-\sisetup{separate-uncertainty = true}
+\sisetup{separate-uncertainty = true, output-decimal-marker = {,}}
 \usepackage{multirow}
+\usepackage{array}
+\usepackage{booktabs}
 \usepackage{marginnote}
+\usepackage{pdfpages}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, patterns, decorations.pathmorphing, calc}
 \usepackage{xcolor}
 
 % ---- Link styling -------------------------------------------------------
@@ -31,12 +36,12 @@
 \begin{document}
 
 \makecoverpage{
-	experiment      = 73,
-	title           = {EXPERIMENT TITLE},
+	experiment      = 34,
+	title           = {Spektralphotometrie},
 	group           = 8,
 	authors         = {Matthes Neumann},
-	tutor           = {Natalia Sychva},
-	dateexperiment  = {30. August 2026}
+	tutor           = {Lucija Ruzic},
+	dateexperiment  = {14. Sept. 2026}
 }
 
 \pagestyle{fancy}
@@ -44,9 +49,10 @@
 \tableofcontents
 \clearpage
 
-\section{Introduction}
+\section{Einleitung}
+\label{sec:einleitung}
 
-\subsection{Motivation}
+\subsection{Ziel des Versuchs}
 \label{sec:motivation}
 
 \vspace{1em}
@@ -63,36 +69,723 @@
 	fonttitle = \normalfont,
 ]
 	\textbf{Werkzeuge:} Claude Sonnet 5, Opus 5 (Anthropic) \\
-	\textbf{Abschnitte:} Formulierungshilfen, Textgeneration und Formatierungshilfen wurden teilweise in 
-	den Abschnitten \ref{sec:motivation}, \ref{sec:grundlagen}, \ref{sec:konstanten}, \ref{sec:aufbau} genutzt.
-	In den restlichen Abschnitten wurden die genannten Transformatoren nur für die Recherche zu technischen
-	Fragen über die Erstellung von Darstellungen in Latex und Python Bibliotheken genutzt.
+	\textbf{Abschnitte:} Zusammenfassung der Physik, Formeln, Formulierung und Formatierung in
+	Abschnitt~\ref{sec:einleitung}.
+	In den restlichen Abschnitten wurde KI nur für technische Fragen zu \LaTeX{} und
+	Python-Bibliotheken genutzt.
 \end{tcolorbox}
+
+In diesem Versuch untersuchen wir die Absorption von Licht in einer Lösung des
+Lebensmittelfarbstoffs Brillantblau FCF mit einem Gitterspektrometer. Zuerst nehmen wir das
+Absorptionsspektrum auf und bestimmen die Wellenlänge maximaler Absorption (Aufgabe~1).
+Danach messen wir bei dieser Wellenlänge ($\lambda \approx \qty{630}{nm}$) die durchgelassene
+Intensität einmal in
+Abhängigkeit von der Schichtdicke $l$ (Lambertsches Gesetz, Aufgabe~2) und einmal in
+Abhängigkeit von der Konzentration $c$ (Beersches Gesetz, Aufgabe~3). Aus beiden
+Messreihen bestimmen wir den molaren Extinktionskoeffizienten $\epsilon$ und vergleichen
+die Ergebnisse untereinander und mit dem Literaturwert.
 
 
 \subsection{Theoretische Grundlagen}
 \label{sec:grundlagen}
 
+Alle Formeln und Nennwerte stammen aus der Versuchsanleitung~\cite{anleitung}.
+
+\subsubsection{Lambertsches Absorptionsgesetz (Aufgabe 2)}
+\label{sec:lambert}
+
+Durchläuft Licht ein absorbierendes Medium, so ist die relative Intensitätsabnahme auf
+einer kurzen Strecke $\mathrm{d}l$ proportional zu dieser Strecke:
+\begin{equation}
+	\frac{\mathrm{d}I}{I} = -k\,\mathrm{d}l
+	\qquad\Longrightarrow\qquad
+	I = I_0\,e^{-kl} .
+	\label{eq:lambert}
+\end{equation}
+Dabei ist $I_0$ die ins Medium eintretende Intensität, $l$ die Schichtdicke und $k$ die
+Absorptionskonstante (Abbildung~\ref{fig:lambert}). Mit dem dekadischen Logarithmus wird
+daraus eine Gerade in $l$:
+\begin{equation}
+	\log I = -k'\,l + \text{const}
+	\qquad\text{mit}\qquad
+	k' = k\,\log e = 0{,}434\,k .
+	\label{eq:lambert_log}
+\end{equation}
+$k'$ heißt dekadischer (Bunsenscher) Absorptionskoeffizient. Auf halblogarithmischem
+Papier liegen die Messpunkte $I(l)$ also auf einer Geraden mit Steigung $-k'$.
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[scale=1.1, >={Latex[length=2mm]}]
+		% Medium
+		\fill[violet!15] (1.5,0) rectangle (5.5,2.6);
+		\draw[violet!60!black] (1.5,0) -- (1.5,2.6) (5.5,0) -- (5.5,2.6);
+		\node[font=\scriptsize, violet!60!black, align=center] at (3.5,2.35) {absorbierendes Medium};
+		% Achsen
+		\draw[->] (0,0) -- (7.0,0) node[below left, font=\scriptsize] {$x$};
+		\draw[->] (0,0) -- (0,2.9) node[left, font=\scriptsize] {$I$};
+		% Intensitaetsverlauf
+		\draw[thick, orange!85!black] (0.2,2.0) -- (1.5,2.0);
+		\draw[thick, orange!85!black, domain=0:4, samples=60]
+			plot ({1.5+\x}, {2.0*exp(-0.45*\x)});
+		\draw[thick, orange!85!black] (5.5,{2.0*exp(-1.8)}) -- (6.8,{2.0*exp(-1.8)});
+		\node[font=\scriptsize, orange!85!black] at (3.9,1.2) {$I_0\,e^{-kx}$};
+		% Beschriftung
+		\node[font=\scriptsize, above] at (0.8,2.0) {$I_0$};
+		\node[font=\scriptsize, above] at (6.2,{2.0*exp(-1.8)}) {$I_l$};
+		\node[font=\scriptsize, left] at (0,2.0) {Lichtquelle};
+		\node[font=\scriptsize, right] at (6.8,{2.0*exp(-1.8)}) {Detektor};
+		\draw[<->] (1.5,-0.4) -- (5.5,-0.4) node[midway, below, font=\scriptsize] {$l$};
+	\end{tikzpicture}
+	\caption{Exponentieller Abfall der Intensität im absorbierenden Medium nach
+		\eqref{eq:lambert}.}
+	\label{fig:lambert}
+\end{figure}
+
+\subsubsection{Beersches Gesetz (Aufgabe 3)}
+\label{sec:beer}
+
+In verdünnten Lösungen ist $k'$ proportional zur Konzentration $c$:
+\begin{equation}
+	k' = \epsilon\,c .
+	\label{eq:beer}
+\end{equation}
+Der molare Extinktionskoeffizient $\epsilon$ hängt nicht von $c$ ab, sondern nur vom Stoff
+und von der Wellenlänge. Zusammen mit \eqref{eq:lambert_log} lautet das Absorptionsgesetz
+\begin{equation}
+	I = I_0\,10^{-k'l} = I_0\,10^{-\epsilon c l} .
+	\label{eq:lambert_beer}
+\end{equation}
+Bei hohen Konzentrationen kann \eqref{eq:beer} ungültig werden, wenn sich neue Ionen mit
+anderem Absorptionsverhalten bilden.
+
+Für die Konzentrationsreihe füllen wir $V_0$ VE-Wasser vor und geben schrittweise die
+Volumina $V_1, \dots, V_4$ der Brillantblau-FCF-Lösung mit Konzentration $\tilde{c}$ zu. Nach dem
+$i$-ten Schritt ist
+\begin{equation}
+	c_i = \tilde{c}\,\frac{\sum_{j=1}^{i} V_j}{V_0 + \sum_{j=1}^{i} V_j} .
+	\label{eq:konzentration}
+\end{equation}
+Mit den Nennvolumina aus Tabelle~\ref{tab:konstanten} ergibt sich die Abstufung
+$c_i = \tilde{c}/16,\ \tilde{c}/8,\ \tilde{c}/4,\ \tilde{c}/2$.
+
+\subsubsection{Bestimmung von \texorpdfstring{$\epsilon$}{epsilon}}
+\label{sec:epsilon}
+
+Nach \eqref{eq:lambert_beer} gibt es zwei Wege zu $\epsilon$. Eine Abnahme der Intensität
+um den Faktor~10 entspricht einer Änderung von $\log I$ um~1. Lesen wir aus der
+Lambert-Geraden die dafür nötige Schichtdicke $l'$ und aus der Beer-Geraden die nötige
+Konzentration $c'$ ab, so gilt
+\begin{equation}
+	\text{Lambert:}\quad k' = \frac{1}{l'} ,\quad \epsilon = \frac{k'}{c}
+	\qquad\qquad
+	\text{Beer:}\quad \epsilon\,l = \frac{1}{c'} ,\quad \epsilon = \frac{1}{c'\,l} .
+	\label{eq:epsilon}
+\end{equation}
+Mit $c$ in \si{mol/l} und $l$ in \si{cm} erhalten wir $\epsilon$ in \si{l/(mol.cm)}.
+Wegen $\qty{1}{l} = \qty{e3}{cm^3}$ gilt
+\begin{equation}
+	\qty{1}{l/(mol.cm)} = \qty{e3}{cm^2/mol} .
+	\label{eq:einheit}
+\end{equation}
+
+\subsubsection{Absorptionsspektrum und Gitterspektrometer (Aufgabe 1)}
+\label{sec:spektrum}
+
+$k'$ und $\epsilon$ hängen von der Wellenlänge ab. Die Funktion $\epsilon(\lambda)$ ist
+das Absorptionsspektrum der Lösung. Seine Maxima sind die Absorptionsbanden, die für jedes
+Ion charakteristisch sind. Das Programm teilt das gemessene Spektrum $I$ durch ein
+Referenzspektrum $I_R$ ohne Küvette und zeigt die optische Dichte
+\begin{equation}
+	\mathrm{OD} = -\log_{10}\frac{I}{I_R}
+	\label{eq:od}
+\end{equation}
+an. Im Gitterspektrometer wird das Licht über eine Lichtleitfaser eingekoppelt, am Gitter
+spektral zerlegt und auf eine CCD-Zeile mit 3648 Pixeln abgebildet. Ein Pixel entspricht
+\qty{0,21}{nm}, die Auflösung beträgt etwa \qty{1}{nm}. Der Dunkelstrom wird vor jeder
+Messung aufgenommen und abgezogen.
+
+\subsubsection{Korrektur bei den beiden längsten Küvetten}
+\label{sec:korrektur}
+
+Die Küvette verkleinert das Bild der Lochblende am Fasereinkoppler, sodass mehr Licht in
+die Faser gelangt. Bei $l = \qty{12}{cm}$ und $l = \qty{24}{cm}$ ist dieser Effekt deutlich. Da die Intensität
+proportional zur Bildfläche ist, korrigieren wir mit den Durchmessern des Lochblendenbildes
+mit ($D_\mathrm{mK}$) und ohne Küvette ($D_\mathrm{oK}$):
+\begin{equation}
+	I_\mathrm{korr} = I\,\frac{D_\mathrm{mK}^2}{D_\mathrm{oK}^2} .
+	\label{eq:korrektur}
+\end{equation}
+
+\subsubsection{Fehlerrechnung}
+\label{sec:fehlerrechnung}
+
+Für $N$ Messwerte $x_i$ bestimmen wir den Mittelwert und dessen statistischen Fehler
+\begin{equation}
+	\overline{x} = \frac{1}{N}\sum_{i=1}^{N} x_i ,
+	\qquad
+	\Delta x_\text{stat} = \sqrt{\frac{1}{N(N-1)}\sum_{i=1}^{N}\left(x_i - \overline{x}\right)^2} .
+	\label{eq:mittelwert}
+\end{equation}
+Mit dem Ablesefehler $\Delta x_\text{abl}$ kombinieren wir quadratisch:
+\begin{equation}
+	\Delta x = \sqrt{\Delta x_\text{stat}^2 + \Delta x_\text{abl}^2} .
+	\label{eq:fehler_kombi}
+\end{equation}
+Für eine Größe $f(x_1, \dots, x_k)$ aus unabhängigen Messgrößen gilt die
+Gauß'sche Fehlerfortpflanzung
+\begin{equation}
+	\Delta f = \sqrt{\sum_{j=1}^{k}
+		\left(\frac{\partial f}{\partial x_j}\,\Delta x_j\right)^{2}} .
+	\label{eq:gauss}
+\end{equation}
+Zwei Werte vergleichen wir über die Abweichung in Standardabweichungen
+\begin{equation}
+	t = \frac{\left|x_1 - x_2\right|}{\sqrt{\Delta x_1^2 + \Delta x_2^2}} ,
+	\label{eq:tabweichung}
+\end{equation}
+wobei bei einem Literaturwert ohne Fehler dessen Beitrag wegfällt. $t \le 2$ werten wir
+als verträglich, $t > 2$ als signifikante Abweichung.
+
+
 \subsection{Versuchsaufbau}
 \label{sec:aufbau}
+
+Der Aufbau ist in Abbildung~\ref{fig:aufbau} skizziert. Das Licht der Lampe fällt durch
+eine Lochblende, die Linse bildet sie auf den Fasereinkoppler ab. Dazwischen steht die
+Küvette auf der Küvettenbank, immer rechts am Anschlag des Halters. Über die Faser gelangt
+das Licht ins Spektrometer, das mit der Software OceanView ausgelesen wird. In Aufgabe~2
+verwenden wir den Küvettensatz mit fester Konzentration, in Aufgabe~3 die offene
+rechteckige Küvette, die wir aus zwei Büretten (VE-Wasser und Brillantblau FCF) befüllen. Die
+Durchführung ist im Messprotokoll (Abschnitt~\ref{sec:messprotokoll}) beschrieben.
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[>={Latex[length=2mm]}, scale=0.98]
+		% Kuevettenbank
+		\draw[thick, fill=black!8] (0,0) rectangle (10.4,0.25);
+		\foreach \x in {0.4,0.8,...,10.2}{\draw (\x,0.25) -- (\x,0.4);}
+		% Lampe mit Justageschrauben
+		\draw[thick, rounded corners=1pt, fill=black!15] (0.2,0.9) rectangle (1.5,2.1);
+		\foreach \y in {1.1,1.5,1.9}{\fill[black!60] (0.2,\y) circle (0.06);}
+		\draw (0.85,0.25) -- (0.85,0.9);
+		% Lichtbuendel
+		\fill[orange!25] (2.3,1.42) -- (3.4,1.05) -- (3.4,1.95) -- (2.3,1.58) -- cycle;
+		\fill[orange!25] (3.4,1.05) -- (9.4,1.47) -- (9.4,1.53) -- (3.4,1.95) -- cycle;
+		\fill[orange!25] (1.5,1.2) -- (2.15,1.42) -- (2.15,1.58) -- (1.5,1.8) -- cycle;
+		% Lochblende
+		\draw[thick, fill=black!60] (2.15,0.8) rectangle (2.3,1.42);
+		\draw[thick, fill=black!60] (2.15,1.58) rectangle (2.3,2.2);
+		\draw (2.225,0.25) -- (2.225,0.8);
+		% Linse
+		\draw[thick, fill=linkblue!20] (3.4,1.5) ellipse (0.12 and 0.7);
+		\draw (3.4,0.25) -- (3.4,0.8);
+		% Kuevette
+		\draw[thick, fill=violet!25, fill opacity=0.8] (4.6,1.05) rectangle (8.6,1.95);
+		\draw (5.0,0.25) -- (5.0,1.05);
+		\draw (8.2,0.25) -- (8.2,1.05);
+		% Fasereinkoppler
+		\draw[thick, fill=black!25] (9.4,1.2) rectangle (9.85,1.8);
+		\draw (9.625,0.25) -- (9.625,1.2);
+		% Lichtleitfaser
+		\draw[very thick, black!70] (9.85,1.5) .. controls (10.8,1.5) and (10.4,2.3) .. (11.3,2.3);
+		% Spektrometer
+		\draw[thick, rounded corners=2pt, fill=black!4] (11.3,0.2) rectangle (14.2,2.7);
+		\draw[thick, pattern=north east lines] (13.55,1.6) -- (13.75,1.6) -- (13.45,2.5) -- (13.25,2.5) -- cycle;
+		\draw[gray] (11.3,2.3) -- (13.5,2.05);
+		\draw[thick, blue!70!black] (13.5,2.05) -- (11.9,0.62);
+		\draw[thick, green!50!black] (13.5,2.05) -- (12.6,0.62);
+		\draw[thick, red!75!black] (13.5,2.05) -- (13.3,0.62);
+		\draw[fill=black!60] (11.6,0.45) rectangle (13.8,0.62);
+		\node[font=\scriptsize] at (12.35,2.5) {Gitter};
+		\node[font=\scriptsize, above] at (12.7,2.75) {Spektrometer};
+		% Beschriftung
+		\node[font=\scriptsize, align=center] at (0.85,-0.45) {Lampe mit\\Justageschrauben};
+		\node[font=\scriptsize, align=center] at (2.3,-1.0) {Lochblende};
+		\node[font=\scriptsize, align=center] at (3.4,-0.45) {Linse};
+		\node[font=\scriptsize, align=center] at (6.6,-0.45) {Küvette mit Brillantblau-FCF-Lösung};
+		\node[font=\scriptsize, align=center] at (9.625,-1.0) {Faser-\\einkoppler};
+		\node[font=\scriptsize, align=center] at (12.75,-0.45) {Gitterspektrometer\\USB4000 $\rightarrow$ PC};
+		% Bemassung
+		\draw[<->] (4.6,2.5) -- (8.6,2.5) node[midway, above, font=\scriptsize] {$l$};
+		\draw[gray, dashed] (4.6,1.95) -- (4.6,2.5);
+		\draw[gray, dashed] (8.6,1.95) -- (8.6,2.5);
+		\draw[<->] (9.4,2.25) -- (9.85,2.25);
+		\node[font=\scriptsize, above] at (9.625,2.3) {$D$};
+	\end{tikzpicture}
+	\caption{Aufbau (nicht maßstäblich). Die Küvette der Länge $l$ verändert den Durchmesser
+		$D$ des Lochblendenbildes am Fasereinkoppler, siehe \eqref{eq:korrektur}. Im
+		Spektrometer zerlegt das Gitter das Licht auf die CCD-Zeile.}
+	\label{fig:aufbau}
+\end{figure}
+
 
 \subsection{Verwendete Konstanten}
 \label{sec:konstanten}
 
+\begin{table}[htbp]
+	\centering
+	\small
+	\begin{tabular}{@{}llll@{}}
+		\toprule
+		\textbf{Größe} & \textbf{Symbol} & \textbf{Wert} & \textbf{Quelle} \\
+		\midrule
+		Messwellenlänge (Aufgabe 2 und 3)       & $\lambda$     & \qty{630}{nm}              & \cite{anleitung} \\
+		Konzentration Küvettensatz              & $c$           & \qty{e-6}{mol/l}           & \cite{anleitung} \\
+		Konzentration in der Bürette            & $\tilde{c}$   & \qty{5e-6}{mol/l}          & \cite{anleitung} \\
+		Schichtdicken Küvettensatz              & $l$           & \qtylist{1,5;3;6;12;24}{cm} & \cite{anleitung} \\
+		Schichtdicke rechteckige Küvette        & $l$           & \qty{1,5}{cm}              & \cite{anleitung} \\
+		Vorgelegtes Wasservolumen               & $V_0$         & \qty{21,0}{ml}             & \cite{anleitung} \\
+		Zugegebene Farbstoff-Volumina           & $V_1 \dots V_4$ & \qtylist{1,4;1,6;4,0;14,0}{ml} & \cite{anleitung} \\
+		Teilung Bürette Wasser / Farbstoff      & --            & \qty{0,05}{ml} / \qty{0,1}{ml} & \cite{anleitung} \\
+		Wellenlängenintervall pro Pixel         & --            & \qty{0,21}{nm}             & \cite{anleitung} \\
+		Auflösung des Spektrometers             & --            & ca.\ \qty{1}{nm}           & \cite{anleitung} \\
+		\bottomrule
+	\end{tabular}
+	\caption{Verwendete Konstanten und Nennwerte.}
+	\label{tab:konstanten}
+\end{table}
+
+\clearpage
+
 \section{Messprotokoll}
 \label{sec:messprotokoll}
 
+% Scan des Messprotokolls hier einbinden, z.B.
+% \includepdf[pages=-, width=\paperwidth, height=\paperheight, keepaspectratio,
+%	pagecommand={\thispagestyle{empty}}, link, linkname=messprotokoll]{Attachments/<scan>.pdf}
+
+\begin{center}
+	\hypertarget{messprotokoll.1}{}%
+	\includegraphics[
+		page=1, 
+		width = \textwidth, 
+		height = 0.9\textheight,
+		keepaspectratio]{Attachments/protokol v34 bearbeitet flat.pdf}
+\end{center}
+
+\includepdf[
+	pages=3,
+	width=\paperwidth,
+	height=\paperheight,
+	keepaspectratio,
+	pagecommand={\thispagestyle{empty}},
+	link,
+	linkname=messprotokoll]{Attachments/protokol v34 bearbeitet flat.pdf}
+
+% Seite 4 des Scans enthält Messtabelle 4.2 (Aufgabe 2)
+\includepdf[
+	pages=4,
+	width=\paperwidth,
+	height=\paperheight,
+	keepaspectratio,
+	pagecommand={\thispagestyle{empty}\label{page:messtabelle42}},
+	link,
+	linkname=messprotokoll]{Attachments/protokol v34 bearbeitet flat.pdf}
+
+\includepdf[
+	pages=5-7,
+	width=\paperwidth,
+	height=\paperheight,
+	keepaspectratio,
+	pagecommand={\thispagestyle{empty}},
+	link,
+	linkname=messprotokoll]{Attachments/protokol v34 bearbeitet flat.pdf}
+
+
+In Darstellung~\ref{fig:I-l-messaufg-2} sehen Sie die unkorrigierte Intensitätskurve $I(l)$.
+Für die Korrektur muss man berücksichtigen, dass die Küvette die Intensität durch Bündelung erhöht. 
+Hier ist die Tabelle mit den Durchschnittsintensitäten für jeden Messpunkt und die dazugehörigen statistischen
+Fehler, da die berechneten Intensitäten und statistischen Fehler in der Messtabelle 4.2 auf 
+Seite~\pageref{page:messtabelle42} nicht stimmen.
+
+\begin{table}[htbp]
+	\centering
+	\small
+	\begin{tabular}{@{}S[table-format=2.1] S[table-format=5.0] S[table-format=2.0]
+			S[table-format=1.2]@{}}
+		\toprule
+		{$l$ [\si{cm}]} & {$\bar I$ [counts]} & {$\Delta_\mathrm{stat} I$ [counts]} & {$\Delta I / I$ [\si{\percent}]} \\
+		\midrule
+		1,5 & 61510 & 70 & 0,11 \\
+		3   & 42430 & 40 & 0,09 \\
+		6   & 20586 & 10 & 0,05 \\
+		12  & 4910  & 6  & 0,12 \\
+		24  & 636   & 4  & 0,63 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Aufgabe 2: Mittelwerte der fünf Einzelmessungen und statistische
+		Fehler nach \eqref{eq:mittelwert}. Die Werte bei $l = \qty{12}{cm}$ und
+		$l = \qty{24}{cm}$ sind noch unkorrigiert, vgl.\ \eqref{eq:korrektur}.}
+	\label{tab:lambert}
+\end{table}
+
+Dabei wurde ein Ablesefehler ab Küvettengrößen von $\qty{6}{cm}$ berücksichtigt, da er bei geringeren Längen
+weniger als $\qty{20}{\percent}$ des statistischen beträgt und somit zu vernachlässigen ist. Es ist zu bemerken, dass durch
+die Aufrundungsvorgaben, die Berücksichtigung des Ablesefehlers bei keiner Küvettenlänge eine Auswirkung auf den resultierenden 
+Fehler hatte. Diese Messpunkte wurden dann in eine halblogarithmische Skala in Darstellung~\ref{fig:I-l-messaufg-2}
+eingetragen. Fehlerbalken wurden nicht miteingezeichnet, da man an den relativen Fehlern erkennt, dass diese so klein wären,
+dass man sie nicht erkennen könnte.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[
+		width=\textwidth,
+		height=0.8\textheight,
+		keepaspectratio]{Attachments/v34 Kurve messprotokoll flat.pdf}
+	\caption{Aufgabe 2: Unkorrigierte Intensität $\bar I$ gegen die Küvettenlänge $l$
+		auf halblogarithmischem Papier (Werte aus Tabelle~\ref{tab:lambert}).}
+	\label{fig:I-l-messaufg-2}
+\end{figure}
+\clearpage
+
+Nun bestimmen wir noch aus den Aufnahmen in Tabelle 4.3 auf Seite \pageref{page:messtabelle42} die Korrekturfaktoren und Wenden diese
+an. Daraus erhalten wir die Folgende Wertetabelle:
+
+Mit den korrigierten Werten und den Werten aus der Tabelle 5.3 auf Seite 6 im Messprotokoll erstellen wir eine Darstellung auf 
+halblogarithmischem Skalenpapier um daraus in der Auswertung  die Lambert- sowie Beer-Geraden zu bestimmen. Die Geraden zeichnen wir
+bereits ein.
+
+TODO: Korrekturformel
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[
+		width=\textwidth,
+		height=0.8\textheight,
+		keepaspectratio]{Attachments/v34 Kurve Auswertung flat.pdf}
+	\caption{Korrigierte Intensitäten gegen die Küvettenlänge $l$ (untere Achse, Lambert)
+		bzw.\ die Konzentration $c$ (obere Achse, Beer) auf halblogarithmischem Papier,
+		mit eingezeichneten Lambert- und Beer-Geraden.}
+	\label{fig:lambert-beer-geraden}
+\end{figure}
 
 \section{Auswertung}
 \label{sec:auswertung}
 
+In diesem Abschnitt werden wir nun die beiden in Darstellung~\ref{fig:lambert-beer-geraden} erstellten 
+Messkurven analysieren und bestimmen mit jeder über ein eigenes Verfahren, Lambert bzw. Beer, 
+unabhängig voneinander den molaren Extinktionskoeffizienten $\epsilon$. Ich werde alle Ergebnisse mit den
+vorgegebenen Rundungsregeln und Signifikanten Stellen angeben. Bei Zwischenrechnungen werde ich jedoch rohe
+Zahlen angeben und mit diesen weiterrechnen, um die Fehler und Resultate nicht zu verfälschen. Da bei beiden
+grafischen Auswertungen die Ablesefehler von $\qty{.5}{\milli\meter}$ auf bspw. einer länge auf dem Papier
+von $\qty{50}{\milli\meter}$ verschwindende Fehler in Größenordnungen, die durch die Fehler der Fehlergeraden
+definitiv dominiert werden.
 
-\section{Disskussion}
+\subsection{Bestimmung des molaren Extinktionskoeffizienten durch Lambert}
+\label{sec:ausw-aufg-1}
+Wir betrachten zunächst die dunklere Kurve in Darstellung~\ref{fig:lambert-beer-geraden}, welche die 
+Lambert-Gerade mit den Daten aus Versuchsaufgabe 2 auf Seite~\pageref{page:messtabelle42} darstellt.
+Wir lesen die x-Achsen-Abschnitte des Steigungsdreiecks auf des Abszisse als $x_1 = \qty{6.0}{cm}$ und $x_2 = \qty{11.2}{cm}$
+bei einem Ablesefehler von einem halben Skalenteil, was $\qty{1}{\milli \meter}$ entspricht. Die 
+entsprechenden Intensitäts-Werte auf der Ordinate lauten $I_1 = \qty{1.9e3}{counts}$ und $I_2 = \qty{5.0e2}{counts}$
+Aus diesen Werten erhalten wir durch Formel~\ref{HEIR EINFÜGEN}:
+
+\begin{align}
+	k' &= \frac{log_{10}(I_1) - log_{10}(I_2)}{x_2 - x_1} 
+	= \frac{log_{10}(\qty{1.9e2}{counts}) - log_{10}(\qty{5e1}{counts})}
+	{ \qty{11.2e-2}{\meter} - \qty{6e-2}{\meter} } \\
+	&= \qty{1.11496846e1}{\per \meter}
+	\approx \qty{1.11e-1}{cm^{-1}}
+	\label{eq:k-strich-ausw}
+\end{align}
+
+Um die Steigung der Fehlergeraden zu bestimmen lesen wir analog die Steigungsdreiecke ab.
+Zuerst die flachere Fehlerkurve zu $k'_{e1}$:
+\begin{align}
+	% flacher
+	x_{e1,1} &= \qty{1.8}{cm}\\
+	I_{e1,1} &= \qty{5.0e2}{counts}\\
+	x_{e1,2} &= \qty{22.2}{cm}\\
+	I_{e1,2} &= \qty{3.4}{counts}\\
+\end{align}
+
+Und dann die steilere Fehlerkurve zu $k'_{e2}$:
+\begin{align}
+	% steiler
+	x_{e2,1} &= \qty{4.8}{cm}\\
+	I_{e2,1} &= \qty{2.8e2}{unit}\\
+	x_{e2,2} &= \qty{21.8}{cm}\\
+	I_{e2,2} &= \qty{3.0}{counts}\\
+\end{align}
+
+Durch analoge Rechnung zu \eqref{eq:k-strich-ausw} kommt man bei den Fehlergeraden auf Werte von 
+ungerundet:
+
+\begin{align}
+	k'_{e1} &= \qty{.106249563}{cm^{-1}}\\
+	k'_{e2} &= \qty{.115884516}{cm^{-1}}	
+\end{align}
+
+Um den Fehler von $k'$ zu berechnen, berchnen wir die Abweichungen zur ausgleichsgeraden. Die Größere
+Abweichung ist dann unser Fehler.
+
+\begin{align}
+	\Delta k'_{e1} &= \qty{.005247283}{cm^{-1}} \approx \qty{.006}{cm^{-1}} \\
+	\Delta k'_{e2} &= \qty{.00438767}{cm^{-1}}	
+\end{align}
+
+Wir nehmen also den ersten Wert und erhalten somit ein Resultat von
+
+\begin{align}
+	\boxed{ k' = 
+		\qty{1.11(6)e-1}{cm^{-1}} = \qty{1.11(6)e1}{\per \meter}
+	}
+	\label{eq:k-strich-result-lambert}
+\end{align}
+
+Mit dieser Konstante können wir aus dem Zusammenhang in Formel~\eqref{HINZUFÜGEN} wie folgt den 
+molaren Extinktionskoeffizienten $\epsilon$ durch eine gegebene Konzentration 
+$c=\qty{1e-6}{\mole \per \liter}$ bestimmen:
+\begin{align}
+	\epsilon_L = \frac{k'}{c} = \qty{1.11496846e5}{\frac{\liter}{\mol \cdot cm}}
+\end{align}
+
+Dabei wurde mit dem ungerundeten Wert von $k'$ in der Formelzeile~\eqref{eq:k-strich-result-lambert} 
+gerechnet. Den Fehler pflanzen wir fort mithilfe der Gaussfortpflanzung, was uns zu der folgenden
+Gleichung führt:
+
+% Gauss allgemein
+\begin{equation} 
+	\Delta \epsilon = \sqrt{\left(\frac{\partial \epsilon}{\partial k'}\,\Delta k'\right)^2} 
+\end{equation}
+
+% partielle Ableitungen
+\begin{align}
+  	\frac{\partial \epsilon}{\partial k'} &= \frac{1}{c}
+\end{align}
+
+% Fehlerformel ausgeschrieben
+\begin{equation} 
+	\Delta \epsilon = \sqrt{\left(\frac{1}{c}\,\Delta k'\right)^2} 
+\end{equation}
+
+Mit den zuvor genannten ungerundeten Werten $\qty{1.11496846e1}{\per \meter}$, 
+$c=\qty{1e-6}{\mole \per \liter}$ bzw. dem zuvor genannten
+Fehler $\Delta k'_{e1} = \qty{.005247283}{cm^{-1}} \approx \qty{.006}{cm^{-1}}$ 
+ergibt das einen molaren Extiktionskoeffizienten über
+
+\begin{align}
+	\boxed{
+		\epsilon_L = \SI{1.11(6)e5}{\frac{\liter}{\mol \cdot cm}}
+	}
+	\label{eq:res-lambert}
+	\end{align}
+
+\subsection{Bestimmung des molaren Extinktionskoeffizienten durch Lambert}
+\label{sec:ausw-aufg-2}
+
+Analog zur vorherigen Aufgabe~\ref{sec:ausw-aufg-1} lesen wir aus 
+Darstellung~\ref{fig:lambert-beer-geraden} die Steigungs dreiecke der Beer-Geraden
+ab.
+
+Wir fangen mit der Ausgleichsgeraden an, welche uns die Werte
+
+\begin{align}
+	c_1 &= \qty{26.5625}{\tilde{c}}\\
+	I_1 &= \qty{2.4e2}{counts}
+\end{align}
+
+\begin{align}
+	c_2 &= \qty{42.8125}{\tilde{c}}\\
+	I_2 &= \qty{1.7e2}{counts}
+\end{align}
+\begin{align}
+	\tilde{c} &= \qty{5e-6}{\mole \per \liter}
+\end{align}
+
+liefern.
+Mit Gleichung~\ref{EINFÜGEN} berechnen wir wie zuvor nun zunächst den Wert
+des bestimmten Extinktionskoeffizienten $\epsilon$:
+
+\begin{align}
+	\epsilon_B = \frac{
+		\log_{10}(I_2)- \log_10(I_1)
+	} {
+		(c_2 - c_1) \cdot d
+	}
+\end{align}
+
+wobei $d = \qty{1.5}{cm}$ die Dicke der Küvette repräsentiert.
+Damit erhalten wir ohne Fehler ein ungerundetes Resultat von
+
+\begin{align}
+		\epsilon_B = \qty{1.228819039e5}{\frac{\liter}{\mol \cdot cm}}
+\end{align}
+
+Nun berechnen wir den Koeffizienten der Fehlergeraden. $\epsilon_{e1}$ ist 
+dabei die flachere und $\epsilon_{e2}$ die steilere. Die Ablesewerte der 
+Fehlergereaden lauten für $\epsilon_{e1}$
+
+\begin{align}% flacher
+	c_{e1,1} &= \qty{.9375}{\tilde{c}}\\
+	I_{e1,1} &= \qty{4.0e2}{counts}\\
+	c_{e1,2} &= \qty{49.0625}{\tilde{c}}\\
+	I_{e1,2} &= \qty{1.6e2}{counts}\\
+\end{align}
+
+und für  $\epsilon_{e2}$
+
+% steiler
+\begin{align}
+	c_{e1,1} &= \qty{.9375}{\tilde{c}}\\
+	I_{e1,1} &= \qty{4.4e2}{counts}\\
+	c_{e1,2} &= \qty{49.375}{\tilde{c}}\\
+	I_{e1,2} &= \qty{1.4e2}{counts}\\
+\end{align}
+TODO:flachere kurve kleineres c und grösseres I
+
+Daraus errechnen sich wieder mit Gleichung~\ref{EINFÜGEN} die Koeffizienten:
+
+\begin{align}
+	\epsilon_{e1} &= \qty{1.102517773e5}{\frac{\liter}{\mol \cdot cm}}\\
+	\epsilon_{e2} &= \qty{1.368979656e5}{\frac{\liter}{\mol \cdot cm}}
+\end{align}
+
+woraus sich die Abweichungen
+
+\begin{align}
+	\Delta \epsilon_{e1} &= \qty{0.14016e5}{\mole \per \liter} \approx \qty{0.15e5}{\frac{\liter}{\mol \cdot cm}}\\
+	\Delta \epsilon_{e2} &= \qty{0.1263e5}{\mole \per \liter}
+\end{align}
+
+ergeben. Wir wählen $\Delta \epsilon_{e1}$ mit der grösseren Abweichung als 
+resultierenden Fehler.\\ 
+Damit erhalten wir das fehlerbehaftete Resultat für $\epsilon_B$ von
+
+\begin{align}
+	\boxed{
+		\epsilon_B = \qty{1.23(.15)e5}{\frac{\liter}{\mol \cdot cm}}
+	}
+	\label{eq:res-beer}
+\end{align}
+
+\subsection{Vergleich der bestimmten Extinktionskoeffizienten}
+
+Um die Rsultate zu Vergleichen, machen wir einen Signifikanztest über
+die Sigmaabweichung. Die beträgt mit dem Verfahren in Abschnitt~\ref{EINFÜGEN}
+\begin{align}
+	\boxed{
+		t = \qty{.8}{\sigma}
+	}	
+\end{align}
+
+was eine sehr gute Verträglichkeit der Messwerte impliziert. Es ist zu bemerken, 
+dass die Bestimmung durch da Lambert Verfahren eine deutlich bessere Präzision 
+des Ergebnisses hervorbringt. Nun vergleichen wir die Werte noch mit dem Literaturwert
+$\epsilon_{lit} = \qty{.97e5}{\frac{\liter}{\mol \cdot cm}}$ (siehe Quelle 3)und erhalten:
+
+\begin{equation}
+	\boxed{
+		\begin{aligned}
+			t_{lit,L}  &=  \qty{2.8}{\sigma}\\
+			t_{lit, B} &= \qty{1.8}{\sigma}
+		\end{aligned}
+	}
+\end{equation}
+
+Der Vergleich zeigt, dass unsere Messergebnisse mit dem Literaturwert verträglich sind,
+dennoch diskutiert werden sollte, wo diese herkommen.
+
+
+\section{Diskussion}
 \label{sec:diskussion}
 
+Wir haben in diesem Experiment erst das Absorbtionsmaximum bei
+\begin{equation}
+	\boxed{
+		\begin{aligned}
+			\lambda_{max} = \qty{628.8(5)}{\nano\meter}
+		\end{aligned}
+	}
+\end{equation}
+bestimmt und dann den molaren Extinktionskoeffizienten von Brilliantblau
+einmal mit dem Lambertverfahren, also konstanter Konzentration, und einmal mit der
+Beer-Methode, also konstanter Länge der Küvette. Dabei haben wir unterschiedliche Ergebnisse 
+erhalten:
 
-\section{Anhang}
-\label{sec:diskussion}
+\begin{equation}
+	\boxed{
+		\begin{aligned}
+			\epsilon_B &= \qty{1.23(.15)e5}{\frac{\liter}{\mol \cdot cm}}\\
+			\epsilon_L &= \SI{1.11(6)e5}{\frac{\liter}{\mol \cdot cm}}
+		\end{aligned}
+	}
+\end{equation}
+
+Mit einer Abweichung vom Literaturvert $\epsilon_{lit} = \qty{.97e5}{\frac{\liter}{\mol \cdot cm}}$
+von
+
+\begin{equation}
+	\boxed{
+		\begin{aligned}
+			t_{lit,L}  &=  \qty{2.8}{\sigma}\\
+			t_{lit, B} &= \qty{1.8}{\sigma}
+		\end{aligned}
+	}
+\end{equation}
+
+Dabei ist die Abweichung von $t_{lit, B} = \qty{1.8}{\sigma}$ beim Beerverfahren so gut verträglich, 
+dass es keiner weiteren Erklärung bedarf. Anders sieht es bei der Bestimmung durch Lambert aus, was uns 
+eine Sigma-Abweichung von $t_{lit,L}  =  \qty{2.8}{\sigma}$ liefert, was grenzwertig hoch ist.
+Das liegt zum einen daran, dass laut Datenblatt die Farbstoffkonzentration bis zu $\qty{14}{\percent}$
+von dem angenommenen Werten abweicht. Das bedingt einen systematischen Fehler, was zu unseren Werten passt,
+da beide Messergebnisse über dem angegebenen Messwert mit ungefähr $\qty{14}{\percent}$ liegen.
+Zudem ist unsere Korrektur sehr ungenau. Man erkennt schon an den Werten der Lambertgrade für 
+die $\qty{12}{cm}$ Küvette, dass der Korrekturwert viel zu stark von der Gerade durch die vorherigen Werte 
+abweicht aber die echte Abweichung so groß ist, dass man den Wert am besten korrigieren sollte.
+Die letzte Fehlerquelle, ist der Literaturwert. Der angegebene Literaturwert wurde in anderen Aufbauten,
+bei anderen Bedingungen bestimmt, die Wellenlänge des Lichts ist etwas geringer und es ist nichtmal ein 
+Fehler angegeben.
+Es handelt sich hier also eher um einen Wert, der uns ganz grob bestätigt, dass wir nicht ganz falsch bei unserer
+Messung liegen und nicht angibt, wie groß unsere tatsächliche Abweichung bei der Messung ist.
+
+Zusammenfassend kann man sagen, dass unsere Messungen zwar teils ungenau sind, uns aber dennoch verschiedene
+Verfahren zur Bestimmung des Extinktinoskoeffizienten mithilfe der Spektrometrie beigebracht haben. Zudem
+halte ich es für sehr sinnvoll, grafische Auswertungen einige Male per Hand zu erstellen, da man dort am Anfang
+noch sehr viele Fehler macht. Auswertungen am logarithmischen Papier sind auch sehr praktisch und haben mir gezeigt,
+wie das eigenlich funktioniert.
+
+
+TODO: Alle signigikaneten stelle prüfen
+Was ins Protokoll gehört, ist nur ein Satz, 
+der zeigt, dass du es bedacht hast — etwa: 
+„Der Ablesefehler des Steigungsdreiecks 
+%±0,5 mm auf 47,4 mm, ≈ 1,5  ist gegenüber der
+ aus den Fehlergeraden gewonnenen Unsicherheit von 23 
+  vernachlässigbar und wird nicht separat angesetzt." 
+  Das ist besser als ein zusätzlicher Fehlerterm, weil 
+  es die Abschätzung zeigt statt sie zu verstec
+
+\section{Quellenverzeichnis}
+\label{sec:quellen}
+
+% thebibliography setzt in der Klasse article selbst eine \section*{Literatur};
+% die wird hier unterdrueckt, damit nur die nummerierte Ueberschrift oben steht.
+\begingroup
+\renewcommand{\section}[2]{}
+\begin{thebibliography}{9}
+
+\bibitem{anleitung}
+	Physikalisches Institut, Universität Heidelberg:
+	\emph{Versuch 34 -- Spektralphotometrie} sowie Kapitel IV
+	\emph{Fehlerrechnung}. Versuchsanleitung zum Physikalischen
+	Anfängerpraktikum PAP1, Stand 08/2026.
+
+\bibitem{claude}
+	Anthropic: \emph{Claude} (Sonnet 5, Opus 5).
+	Verwendet für Formulierungs-, Formatierungs- und Recherchehilfe,
+	siehe Hinweis in Abschnitt~\ref{sec:motivation}.
+
+\bibitem{chebotarev2017}
+	A.\,N.~Chebotarev, K.\,V.~Bevziuk, D.\,V.~Snigur, Ya.\,R.~Bazel':
+	\emph{The Brilliant Blue FCF Ion-Molecular Forms in Solutions According
+	to the Spectrophotometry Data}. Russian Journal of Physical Chemistry A
+	\textbf{91}(10), S.~1907--1912 (2017).
+	\href{https://doi.org/10.1134/S0036024417100089}{doi:10.1134/S0036024417100089}
+
+\end{thebibliography}
+\endgroup
 
 
 \end{document}

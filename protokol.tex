@@ -2,6 +2,7 @@
 \usepackage{sty/Layout}
 \usepackage{sty/Commands}
 \usepackage{siunitx}
+\usepackage{array}
 \usepackage{multirow}
 \usepackage{marginnote}
 \usepackage{xcolor}
@@ -9,10 +10,33 @@
 % ===========================================================================
 % Kopfzeile
 % ===========================================================================
-\fancyhead[L]{\textsf{\textbf{Measurement Report}}}
+\fancyhead[L]{\textsf{\textbf{PAP1 -- Messprotokoll}}}
 \fancyhead[C]{}
-\fancyhead[R]{}
+\fancyhead[R]{Versuch 34 -- Spektralphotometrie}
+\fancyfoot[C]{\thepage}
 
+% ===========================================================================
+% Hilfsmakros fuer die Eintragefelder
+% ===========================================================================
+% Leerstelle zum Eintragen, optional mit abweichender Breite
+\newcommand{\bl}[1][2cm]{\underline{\hspace{#1}}}
+% Eintragefeld mit Einheit -- bleibt beim Zeilenumbruch zusammen
+\newcommand{\blu}[2][2cm]{\mbox{\bl[#1]\,\si{#2}}}
+% Zeilenhoehe fuer handschriftliche Eintraege in Tabellen
+\newcommand{\zh}{\rule[-0.45cm]{0pt}{1.1cm}}
+\newcommand{\zhs}{\rule[-0.30cm]{0pt}{0.85cm}}
+\newcommand{\zhh}{\rule[-0.65cm]{0pt}{1.6cm}}
+% Ankreuzfeld
+\newcommand{\ak}{$\Box$}
+% Kurze Erlaeuterung, was in diesem Abschnitt passiert
+\newcommand{\was}[1]{\begingroup\small\itshape #1\par\endgroup\vspace{0.15cm}}
+% Spaltentypen: L = linksbuendig umbrechend, C = zentriert umbrechend
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+% Einheiten, die im ganzen Protokoll einheitlich verwendet werden
+\sisetup{output-decimal-marker={,}}
+\DeclareSIUnit{\counts}{counts}
+\newcommand{\cunit}{\SI{e-6}{mol/l}}
 
 \begin{document}
 
@@ -22,65 +46,437 @@
 % Kopf -- Linien zum Ausfuellen
 % ===========================================================================
 \begin{center}
-	{\LARGE\bfseries Experiment \underline{\hspace{1.5cm}} -- \underline{\hspace{7cm}}} \\[0.4cm]
-	{\large Measurement Report}
+  {\LARGE\bfseries Versuch 34 -- Spektralphotometrie} \\[0.4cm]
+  {\large Messprotokoll}
 \end{center}
 
-\vspace{0.5cm}
+\vspace{0.3cm}
 
 \begin{tabular}{ll}
-	\textbf{Gruppe:} & 8 \\[10pt]
-	\textbf{Autoren:} & \underline{\hspace{8cm}} \\[10pt]
-	                  & \underline{\hspace{8cm}} \\[10pt]
-	\textbf{Tutor:} & Natalia Sychva \\[10pt]
-	\textbf{Datum:} & \underline{\hspace{8cm}} \\[10pt]
+  \textbf{Gruppe:}         & \bl[8cm] \\[10pt]
+  \textbf{Autoren:}        & \bl[8cm] \\[10pt]
+                           & \bl[8cm] \\[10pt]
+  \textbf{Tutor:}          & \bl[8cm] \\[10pt]
+  \textbf{Versuchsdatum:}  & \bl[8cm] \\[10pt]
+  \textbf{Uhrzeit:}        & von \bl[3cm] bis \bl[3cm] Uhr \\[10pt]
 \end{tabular}
+
+\vspace{0.3cm}
+
+\was{Ziel des Versuchs: Mit einem Gitterspektrometer wird zun\"achst das
+Absorptionsspektrum einer Brillantblau-FCF-L\"osung aufgenommen und die
+Wellenl\"ange maximaler Absorption bestimmt (Aufgabe 1). Anschlie\ss{}end wird bei
+dieser Wellenl\"ange ($\lambda \approx \SI{630}{nm}$) die transmittierte Intensit\"at einmal als Funktion der
+Schichtdicke $l$ (Lambertsches Gesetz, Aufgabe 2) und einmal als Funktion der
+Konzentration $c$ (Beersches Gesetz, Aufgabe 3) gemessen; aus beiden Geraden folgt
+der molare Extinktionskoeffizient $\epsilon$.}
+
+\noindent\fbox{\parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule}{\small
+\textbf{Einheiten in diesem Protokoll (bitte einhalten):}
+Schichtdicke $l$ in \si{cm} \,$\cdot$\,
+Lochblenden-Durchmesser $D$ in \si{mm} \,$\cdot$\,
+Volumina $V$ in \si{ml} \,$\cdot$\,
+Konzentration $c$ in \cunit{} \,$\cdot$\,
+Wellenl\"ange $\lambda$ in \si{nm} \,$\cdot$\,
+Integrationszeit $t_\mathrm{int}$ in \si{ms} \,$\cdot$\,
+Intensit\"at $I$ in \si{\counts} (Anzeige OceanView).}}
 
 % ===========================================================================
 % Verwendete Geraete
 % ===========================================================================
-\section{Verwendete Geräte}
+\section{Verwendete Ger\"ate}
 
-\begin{itemize}
-	\item \underline{\hspace{12cm}}
-	\item \underline{\hspace{12cm}}
-	\item \underline{\hspace{12cm}}
-	\item \underline{\hspace{12cm}}
-	\item \underline{\hspace{12cm}}
-	\item \underline{\hspace{12cm}}
-\end{itemize}
+\begin{tabular}{@{}L{6.6cm}L{8.6cm}@{}}
+  \textbf{Ger\"at} & \textbf{Typ / Bezeichnung / Bemerkung} \\[5pt]
+  Lichtquelle (Lampe mit Justageschrauben) & \bl[7cm] \\[7pt]
+  Lochblende und Linse                     & \bl[7cm] \\[7pt]
+  K\"uvettenbank mit Fasereinkoppler       & \bl[7cm] \\[7pt]
+  Gitterspektrometer                       & Ocean Optics USB4000, \bl[3.5cm] \\[7pt]
+  Computer mit OceanView und Drucker       & \bl[7cm] \\[7pt]
+  Satz K\"uvetten (5 St\"uck), Brillantblau FCF \SI{e-6}{mol/l}
+                                           & Satz-Nr.\ \bl[5.5cm] \\[12pt]
+  Offene rechteckige K\"uvette ($l = \SI{1,5}{cm}$) & \bl[7cm] \\[7pt]
+  B\"urette VE-Wasser (\SI{25}{ml}, Teilung \SI{0,05}{ml}) & \bl[7cm] \\[12pt]
+  B\"urette Brillantblau FCF \SI{5e-6}{mol/l} (\SI{25}{ml}, Teilung \SI{0,1}{ml})
+                                           & \bl[7cm] \\[12pt]
+  Stahllineal / Schieblehre                & \bl[7cm] \\[7pt]
+  \bl[6cm]                                 & \bl[7cm] \\[7pt]
+\end{tabular}
+
+\vspace{0.35cm}
+
+\noindent Ablesegenauigkeiten:
+
+\vspace{0.2cm}
+\noindent Skalenteilung Schieblehre / Lineal: \blu[2cm]{mm} \qquad
+Ableseunsicherheit $\Delta D$: $\pm$ \blu[1.8cm]{mm}
+
+\vspace{0.25cm}
+\noindent Ableseunsicherheit B\"urette Wasser: $\pm$ \blu[1.8cm]{ml} \qquad
+B\"urette Farbstoff: $\pm$ \blu[1.8cm]{ml}
+
+\vspace{0.25cm}
+\noindent Schwankung der Intensit\"atsanzeige (grob): $\pm$ \blu[2cm]{\counts}
+\qquad Sonstiges: \bl[4cm]
+
+\newpage
 
 % ===========================================================================
-% Aufgaben -- pro Aufgabe eine Subsection, Platz zum Eintragen
+% Skizze des Aufbaus
 % ===========================================================================
-\section{Aufgaben}
+\section{Skizze des Versuchsaufbaus}
 
-\subsection{Aufgabe 1}
+\was{Das Licht der Lampe f\"allt durch eine Lochblende, wird von einer Linse auf den
+Fasereinkoppler abgebildet und durchl\"auft dabei die K\"uvette auf der
+K\"uvettenbank. \"Uber die Lichtleitfaser gelangt es in das Gitterspektrometer, das
+am Gitter spektral zerlegt und auf eine CCD-Zeile (3648 Pixel, \SI{0,21}{nm} pro
+Pixel) abbildet. Die K\"uvetten werden immer \emph{rechts am Anschlag} des
+Halters platziert.}
 
-\vspace{12cm}
+\vspace{0.2cm}
+\noindent\framebox[\textwidth]{\rule{0pt}{8.5cm}}
+
+\vspace{0.4cm}
+
+\noindent Bemerkungen zum Aufbau (Justage, Ausleuchtung des Fasereinkopplers,
+Besonderheiten):
+
+\vspace{0.2cm}
+\noindent \bl[15cm]
+
+\vspace{0.7cm}
+\noindent \bl[15cm]
+
+\vspace{0.7cm}
+\noindent \bl[15cm]
 
 \newpage
 
-\subsection{Aufgabe 2}
+% ===========================================================================
+% Aufgabe 1 -- Wellenlaenge maximaler Absorption
+% ===========================================================================
+\section{Aufgabe 1: Absorptionsspektrum von Brillantblau FCF}
 
-\vspace{12cm}
+\was{Mit dem Assistenten \emph{Absorbance only} wird ein Referenzspektrum $I_R$
+(ohne K\"uvette) und eine Dunkelmessung aufgenommen; angezeigt wird dann die
+optische Dichte $\mathrm{OD} = -\log_{10}(I/I_R)$. Mit der \SI{12}{cm}-K\"uvette
+im Strahlengang wird im Bereich \SIrange{430}{660}{nm} die Wellenl\"ange
+maximaler Absorption mit dem Cursor bestimmt; das Spektrum wird als Bild
+gespeichert.}
+
+\subsection{Einstellungen}
+
+\begin{center}
+  Fasereinkoppler symmetrisch ausgeleuchtet: \ak{} \qquad
+  Spektrum nicht in S\"attigung: \ak{}
+\end{center}
+
+\noindent Integrationszeit $t_\mathrm{int}$ = \blu[2.2cm]{ms} \qquad
+Scans to Average = \bl[1.8cm] (Soll: 50)
+
+\vspace{0.25cm}
+\noindent Referenzmessung aufgenommen: \ak{} \qquad
+Dunkelmessung (Lampe aus) aufgenommen: \ak{}
+
+\vspace{0.25cm}
+\noindent K\"uvette $l = \SI{12}{cm}$ eingesetzt: \ak{}
+
+\subsection{Wellenl\"ange maximaler Absorption}
+
+\begin{center}
+{\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|C{1.3cm}|C{3.4cm}|C{3.0cm}|C{2.6cm}|L{4.4cm}|}
+  \hline
+  \zh \textbf{Nr.} & \textbf{Wellenl\"ange} $\lambda_\mathrm{max}$ \newline [\si{nm}] &
+  \textbf{Ablesefehler} \newline [\si{nm}] & \textbf{OD} \newline [--] &
+  \textbf{Bemerkung} \\
+  \hline
+  1 & & & & \zhs \\ \hline
+  2 & & & & \zhs \\ \hline
+  3 & & & & \zhs \\ \hline
+\end{tabular}}
+\end{center}
+
+\noindent\small (Aufl\"osung des Spektrometers ca.\ \SI{1}{nm}; nicht benutzte
+Zeilen streichen.)\normalsize
+
+\vspace{0.3cm}
+
+\noindent Spektrum als Bild gespeichert: \ak{} \qquad
+Dateiname: \bl[5cm]
+
+\vspace{0.4cm}
+
+\noindent Beobachtungen (Form des Spektrums, Rauschen, S\"attigung):
+
+\vspace{0.2cm}
+\noindent \bl[15cm]
+
+\vspace{0.6cm}
+\noindent \bl[15cm]
+
+\vspace{0.6cm}
+\noindent \bl[15cm]
 
 \newpage
 
-\subsection{Aufgabe 3}
+% ===========================================================================
+% Aufgabe 2 -- Lambertsches Gesetz
+% ===========================================================================
+\section{Aufgabe 2: Absorption als Funktion der Schichtdicke (Lambert)}
 
-\vspace{12cm}
+\was{Bei fester Konzentration $c = \SI{e-6}{mol/l}$ wird die Intensit\"at bei
+der in Aufgabe 1 bestimmten Wellenl\"ange ($\lambda \approx \SI{630}{nm}$) im Fenster \emph{View Minus Bkgnd} f\"ur alle f\"unf
+K\"uvetten je f\"unfmal im Einzelaufnahmemodus abgelesen. Mittelwert und Fehler des
+Mittelwerts werden sofort berechnet und auf halblogarithmischem Papier gegen $l$
+eingetragen.}
+
+\subsection{Einstellungen}
+
+\begin{center}
+  K\"urzeste K\"uvette rechts im Halter: \ak{} \qquad
+  Dunkelmessung (Lampe aus): \ak{}
+\end{center}
+
+\noindent Integrationszeit $t_\mathrm{int}$ = \blu[2.2cm]{ms} \qquad
+Scans to Average = \bl[1.8cm] (Soll: 50)
+
+\vspace{0.25cm}
+\noindent Cursor-Wellenl\"ange $\lambda$ = \blu[1.8cm]{nm}
+
+\vspace{0.25cm}
+\noindent Intensit\"at mit k\"urzester K\"uvette nach Einstellung
+(Soll ca.\ \SI{63000}{\counts}): \blu[2.5cm]{\counts}
+
+\subsection{Messreihe}
+
+\begin{center}
+{\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|C{0.8cm}|C{1.3cm}|C{1.55cm}|C{1.55cm}|C{1.55cm}|C{1.55cm}|C{1.55cm}|C{1.9cm}|C{1.9cm}|}
+  \hline
+  \zh \textbf{Nr.} & $l$ \newline [\si{cm}] &
+  $I_1$ \newline [\si{\counts}] & $I_2$ \newline [\si{\counts}] &
+  $I_3$ \newline [\si{\counts}] & $I_4$ \newline [\si{\counts}] &
+  $I_5$ \newline [\si{\counts}] &
+  $\bar{I}$ \newline [\si{\counts}] & $\Delta\bar{I}$ \newline [\si{\counts}] \\
+  \hline
+  1 & 1,5 & & & & & & & \zh \\ \hline
+  2 & 3   & & & & & & & \zh \\ \hline
+  3 & 6   & & & & & & & \zh \\ \hline
+  4 & 12  & & & & & & & \zh \\ \hline
+  5 & 24  & & & & & & & \zh \\ \hline
+\end{tabular}}
+\end{center}
+
+\noindent\small ($\Delta\bar{I}$: Fehler des Mittelwerts,
+$\sigma/\sqrt{5}$. Bei $l = \SI{12}{cm}$ und $l = \SI{24}{cm}$ ist $\bar{I}$ der
+\emph{unkorrigierte} Wert.)\normalsize
+
+\vspace{0.25cm}
+\noindent Mittelwerte sofort auf halblogarithmisches Papier eingetragen: \ak{}
+
+\subsection{Korrektur bei den beiden l\"angsten K\"uvetten ($l = \SI{12}{cm}$, \SI{24}{cm})}
+
+\was{Die K\"uvette verkleinert das Bild der Lochblende am Fasereinkoppler und
+erh\"oht so die Intensit\"at. Der Durchmesser des Lochblendenbildes wird mit
+Schieblehre oder Lineal einmal mit ($D_\mathrm{mK}$) und einmal ohne
+($D_\mathrm{oK}$) K\"uvette gemessen; korrigiert wird mit
+$I_\mathrm{korr} = I\,D_\mathrm{mK}^2/D_\mathrm{oK}^2$.}
+
+\begin{center}
+{\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|C{1.3cm}|C{3.6cm}|C{3.6cm}|L{5.6cm}|}
+  \hline
+  \zh $l$ \newline [\si{cm}] & $D_\mathrm{mK}$ (mit K\"uvette) \newline [\si{mm}] &
+  $D_\mathrm{oK}$ (ohne K\"uvette) \newline [\si{mm}] & \textbf{Bemerkung} \\
+  \hline
+  12 & & & \zhs \\ \hline
+  24 & & & \zhs \\ \hline
+\end{tabular}}
+\end{center}
+
+\noindent Messinstrument: \ak{} Schieblehre \quad \ak{} Stahllineal \qquad
+Ablesefehler $\Delta D$ = $\pm$ \blu[1.8cm]{mm}
+
+\vspace{0.4cm}
+
+\noindent Bemerkungen (Stabilit\"at der Anzeige, Position der K\"uvetten, Drift der
+Lampe):
+
+\vspace{0.2cm}
+\noindent \bl[15cm]
 
 \newpage
 
-\subsection{Aufgabe 4}
+% ===========================================================================
+% Aufgabe 3 -- Beersches Gesetz
+% ===========================================================================
+\section{Aufgabe 3: Absorption als Funktion der Konzentration (Beer)}
 
-\vspace{12cm}
+\was{In die offene rechteckige K\"uvette ($l = \SI{1,5}{cm}$) werden
+$V_0 = \SI{21}{ml}$ VE-Wasser gef\"ullt (Nullmessung), danach schrittweise die
+Volumina $V_1 \dots V_4$ der Brillantblau-FCF-L\"osung ($\tilde{c} = \SI{5e-6}{mol/l}$)
+zugegeben. Die Konzentration nach Schritt $i$ ist
+$c_i = \tilde{c}\,(V_1 + \dots + V_i)/(V_0 + V_1 + \dots + V_i)$. F\"ur jede
+Konzentration wird die Intensit\"at bei $\lambda_\mathrm{max}$ f\"unfmal abgelesen und sofort
+mit zus\"atzlicher $c$-Abszisse in das Diagramm aus Aufgabe 2 eingetragen.}
+
+\subsection{Einstellungen}
+
+\begin{center}
+  K\"uvette in rechtem Halter: \ak{} \qquad
+  Spektrum bei $\lambda_\mathrm{max}$ gerade nicht ges\"attigt: \ak{} \\[4pt]
+  Dunkelmessung (Lampe aus): \ak{}
+\end{center}
+
+\noindent Integrationszeit $t_\mathrm{int}$ = \blu[2.2cm]{ms} \qquad
+Scans to Average = \bl[1.8cm] (Soll: 50)
+
+\vspace{0.25cm}
+\noindent Cursor-Wellenl\"ange $\lambda$ = \blu[1.8cm]{nm}
+
+\subsection{Zugegebene Volumina}
+
+\was{Tats\"achlich zugegebene Volumina aus den B\"urettenst\"anden vor und nach dem
+Einf\"ullen notieren -- nicht nur den Sollwert. Sollwerte ergeben die Abstufung
+$c = \tilde{c}/16,\ \tilde{c}/8,\ \tilde{c}/4,\ \tilde{c}/2$.}
+
+\begin{center}
+{\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|C{1.1cm}|C{1.6cm}|C{1.6cm}|C{2.0cm}|C{2.0cm}|C{1.9cm}|C{2.1cm}|C{2.1cm}|}
+  \hline
+  \zh \textbf{Schritt} & \textbf{L\"osung} & $V_{i,\mathrm{Soll}}$ \newline [\si{ml}] &
+  \textbf{B\"urette vorher} [\si{ml}] & \textbf{B\"urette nachher} [\si{ml}] &
+  $V_i$ \newline [\si{ml}] &
+  $c_{i,\mathrm{Soll}}$ \newline [\cunit] & $c_i$ \newline [\cunit] \\
+  \hline
+  $V_0$ & Wasser    & 21,0 & & & & 0    & 0 \zh \\ \hline
+  $V_1$ & Farbstoff & 1,4  & & & & 0,3125 & \zh \\ \hline
+  $V_2$ & Farbstoff & 1,6  & & & & 0,625  & \zh \\ \hline
+  $V_3$ & Farbstoff & 4,0  & & & & 1,25   & \zh \\ \hline
+  $V_4$ & Farbstoff & 14,0 & & & & 2,5    & \zh \\ \hline
+\end{tabular}}
+\end{center}
+
+\noindent\small ($V_i$ = B\"urette nachher $-$ B\"urette vorher; $c_i$ darf erst bei
+der Auswertung ausgef\"ullt werden.)\normalsize
 
 \newpage
 
-\subsection{Aufgabe 5}
+\subsection{Messreihe}
 
-\vspace{12cm}
+\begin{center}
+{\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|C{1.2cm}|C{1.8cm}|C{1.45cm}|C{1.45cm}|C{1.45cm}|C{1.45cm}|C{1.45cm}|C{1.75cm}|C{1.75cm}|}
+  \hline
+  \zh \textbf{Schritt} & $c_\mathrm{Soll}$ \newline [\cunit] &
+  $I_1$ \newline [\si{\counts}] & $I_2$ \newline [\si{\counts}] &
+  $I_3$ \newline [\si{\counts}] & $I_4$ \newline [\si{\counts}] &
+  $I_5$ \newline [\si{\counts}] &
+  $\bar{I}$ \newline [\si{\counts}] & $\Delta\bar{I}$ \newline [\si{\counts}] \\
+  \hline
+  $V_0$ & 0    & & & & & & & \zh \\ \hline
+  $V_1$ & 0,3125 & & & & & & & \zh \\ \hline
+  $V_2$ & 0,625  & & & & & & & \zh \\ \hline
+  $V_3$ & 1,25   & & & & & & & \zh \\ \hline
+  $V_4$ & 2,5    & & & & & & & \zh \\ \hline
+\end{tabular}}
+\end{center}
+
+\vspace{0.1cm}
+\noindent Mittelwerte sofort mit zus\"atzlicher $c$-Abszisse ins Diagramm
+eingetragen: \ak{} \qquad
+Nach jeder Zugabe umger\"uhrt / durchmischt: \ak{}
+
+\vspace{0.4cm}
+
+\noindent Bemerkungen (Durchmischung, Luftblasen, Tropfen an der B\"urette,
+Stabilit\"at):
+
+\vspace{0.2cm}
+\noindent \bl[15cm]
+
+\vspace{0.6cm}
+\noindent \bl[15cm]
+
+\vspace{0.6cm}
+\noindent \bl[15cm]
+
+\newpage
+
+% ===========================================================================
+% Nennwerte / Konstanten
+% ===========================================================================
+\section{Nennwerte und Konstanten laut Anleitung}
+
+\begin{center}
+\begin{tabular}{|L{7.4cm}|L{7.4cm}|}
+  \hline
+  \zhs Messwellenl\"ange (Aufgaben 2 und 3) & $\lambda \approx \SI{630}{nm}$ (Maximum aus Aufgabe 1) \\
+  \hline
+  \zhs Konzentration K\"uvettensatz & $c = \SI{e-6}{mol/l} = 1{,}0\ \cunit$ \\
+  \hline
+  \zhs Konzentration in der B\"urette & $\tilde{c} = \SI{5e-6}{mol/l} = 5{,}0\ \cunit$ \\
+  \hline
+  \zhs Schichtdicken K\"uvettensatz & $l = 1{,}5;\ 3;\ 6;\ 12;\ 24$ \si{cm} \\
+  \hline
+  \zhs Schichtdicke rechteckige K\"uvette & $l = \SI{1,5}{cm}$ \\
+  \hline
+  \zhs Volumina Beer-Messung &
+  $V_0 = 21{,}0$;\ $V_1 = 1{,}4$;\ $V_2 = 1{,}6$;\ $V_3 = 4{,}0$;\ $V_4 = 14{,}0$ \si{ml} \\
+  \hline
+  \zhs Teilung B\"uretten (Wasser / Farbstoff) & \SI{0,05}{ml} / \SI{0,1}{ml} \\
+  \hline
+  \zhs Spektrometer: Pixelbreite / Aufl\"osung & \SI{0,21}{nm} / ca.\ \SI{1}{nm} \\
+  \hline
+  \zhs Spektralbereich des Spektrometers & \SIrange{180}{950}{nm} \\
+  \hline
+  \zhs Soll-Intensit\"at bei k\"urzester K\"uvette & ca.\ \SI{63000}{\counts} \\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\noindent Zusammenh\"ange: \quad
+$I = I_0\,10^{-k'l} = I_0\,10^{-\epsilon c l}$, \quad
+$k' = \epsilon c = 0{,}434\,k$, \quad
+$\mathrm{OD} = -\log_{10}\dfrac{I}{I_R}$,
+
+\vspace{0.2cm}
+\noindent \phantom{Zusammenh\"ange:} \quad
+$c_i = \tilde{c}\,\dfrac{\sum_{j=1}^{i} V_j}{V_0 + \sum_{j=1}^{i} V_j}$, \quad
+$I_\mathrm{korr} = I\,\dfrac{D_\mathrm{mK}^2}{D_\mathrm{oK}^2}$, \quad
+$\epsilon$ in \si{l/(mol.cm)} und \si{cm^2/mol}.
+
+% ===========================================================================
+% Bemerkungen
+% ===========================================================================
+\section{Bemerkungen und Besonderheiten w\"ahrend der Messung}
+
+\vspace{0.25cm}
+\noindent \bl[15cm]
+
+\vspace{0.7cm}
+\noindent \bl[15cm]
+
+\vspace{0.7cm}
+\noindent \bl[15cm]
+
+\vspace{0.7cm}
+\noindent \bl[15cm]
+
+\vspace{0.8cm}
+
+\noindent
+\begin{tabular}{@{}L{7.4cm}L{7.4cm}@{}}
+  \bl[6.5cm] & \bl[6.5cm] \\[6pt]
+  \small Datum, Unterschrift Studierende & \small Abzeichnung Tutor:in \\
+\end{tabular}
+
+\newpage
+\thispagestyle{fancy}
+\section*{Zus\"atzlicher Platz f\"ur Messwerte und Notizen}
+\mbox{}
 
 \end{document}
